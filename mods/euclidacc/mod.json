@@ -1,0 +1,53 @@
+{
+ "id": "euclidacc",
+ "version": "0.2",
+ "title": "Euclid Accents",
+ "category": "Sequencer",
+ "license": "GPL-2.0-or-later",
+ "author": "Cere, made with Claude",
+ "description": "Euclid Accents, after the Analog Rytm mod: a Euclidean rhythm accents the trigs you already have instead of adding new ones. SETTINGS: ACC T1-T8 (OFF, 1-16 accents spread evenly over the track's length, the first step always one) and ACC DEPTH (0-64: accented trigs play DEPTH/2 louder, the rest DEPTH/2 softer). The pattern itself never changes. Settings are saved. Needs seq-events. Its rows sit in the MOD SETTINGS section when that mod is in the build.",
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "sources": [
+  "euclidacc.c",
+  "euclidacc.s"
+ ],
+ "cflags": [
+  "-DEMMC_READ_AT=0x400e2c14",
+  "-DEMMC_WRITE_AT=0x400e2dfa",
+  "-DSAVE_BLOCK=0x60042"
+ ],
+ "defsym": {
+  "STR_CTOR": "0x4017af20"
+ },
+ "subscribe": [
+  {
+   "event": "ev_fire_vel",
+   "fn": "acc_vel",
+   "order": 50
+  },
+  {
+   "event": "ev_settings",
+   "fn": "acc_settings",
+   "order": 77
+  },
+  {
+   "event": "ev_tick",
+   "fn": "acc_tick",
+   "order": 80
+  }
+ ],
+ "resources": {
+  "core": "4.1",
+  "names": [
+   "emmc:0x60042"
+  ]
+ },
+ "requires": [
+  "core",
+  "seq-events"
+ ],
+ "weak": [
+  "modset_closed"
+ ]
+}

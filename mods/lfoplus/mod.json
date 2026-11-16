@@ -1,0 +1,175 @@
+{
+ "id": "lfoplus",
+ "version": "0.5",
+ "title": "LFO+: new waves and slow speeds",
+ "category": "Sound",
+ "license": "GPL-2.0-or-later",
+ "author": "Cere, made with Claude",
+ "description": "22 new LFO waves after RND on the WAVE knob, each with its own picture on the LFO page (audio and MIDI tracks): PLS pulse, STP staircase, TRP trapezoid, BMP double bump, FIN shark fin, BNC bouncing ball, then 16 shapes from the Jomox Alphabase: DIP HSU HSD DCY GRW SFL BWL NTC TSQ TTH DBV ZIG SEQ CHS NSE SPK. Four slower speeds after 2k on the audio tracks' MULT knob: /2 /4 /8 /16 in time with the tempo, then the same four free-running.",
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "sources": [
+  "lfoplus.c",
+  "lfoplus.s"
+ ],
+ "sites": [
+  {
+   "addr": "0x401aac08",
+   "stock": "00000600",
+   "op": "bytes",
+   "new": "00001c00",
+   "kind": "data"
+  },
+  {
+   "addr": "0x401aaddc",
+   "stock": "00000600",
+   "op": "bytes",
+   "new": "00001c00",
+   "kind": "data"
+  },
+  {
+   "addr": "0x401aab6c",
+   "stock": "00001700",
+   "op": "bytes",
+   "new": "00001f00",
+   "kind": "data"
+  },
+  {
+   "addr": "0x401aad40",
+   "stock": "00001700",
+   "op": "bytes",
+   "new": "00001f00",
+   "kind": "data"
+  },
+  {
+   "addr": "0x401526c4",
+   "stock": "4005fb26",
+   "op": "ptr",
+   "target": "lfo_wave_fmt"
+  },
+  {
+   "addr": "0x40152736",
+   "stock": "4005fc3e",
+   "op": "ptr",
+   "target": "lfo_mult_fmt"
+  },
+  {
+   "addr": "0x400ed7ea",
+   "stock": "7e06",
+   "op": "bytes",
+   "new": "7e1c",
+   "kind": "code"
+  },
+  {
+   "addr": "0x400ed7f0",
+   "stock": "7606",
+   "op": "bytes",
+   "new": "761c",
+   "kind": "code"
+  },
+  {
+   "addr": "0x400ed850",
+   "stock": "401bcdc4",
+   "op": "ptr",
+   "target": "lfo_hold_half"
+  },
+  {
+   "addr": "0x400ed876",
+   "stock": "401bcdfc",
+   "op": "ptr",
+   "target": "lfo_hold_down"
+  },
+  {
+   "addr": "0x400ed880",
+   "stock": "401bcde0",
+   "op": "ptr",
+   "target": "lfo_hold_up"
+  },
+  {
+   "addr": "0x400ed962",
+   "stock": "401bce18",
+   "op": "ptr",
+   "target": "lfo_waves"
+  },
+  {
+   "addr": "0x400ed7b6",
+   "stock": "4a806c044280",
+   "op": "jmp",
+   "target": "lfo_mult_step"
+  },
+  {
+   "addr": "0x400ed4fc",
+   "stock": "7206",
+   "op": "bytes",
+   "new": "721c",
+   "kind": "code"
+  },
+  {
+   "addr": "0x400ed502",
+   "stock": "7606",
+   "op": "bytes",
+   "new": "761c",
+   "kind": "code"
+  },
+  {
+   "addr": "0x400ed534",
+   "stock": "401bcdc4",
+   "op": "ptr",
+   "target": "lfo_hold_half"
+  },
+  {
+   "addr": "0x400ed55e",
+   "stock": "401bcdfc",
+   "op": "ptr",
+   "target": "lfo_hold_down"
+  },
+  {
+   "addr": "0x400ed56a",
+   "stock": "401bcde0",
+   "op": "ptr",
+   "target": "lfo_hold_up"
+  },
+  {
+   "addr": "0x400ed656",
+   "stock": "401bce18",
+   "op": "ptr",
+   "target": "lfo_waves"
+  },
+  {
+   "addr": "0x40097016",
+   "stock": "7c06",
+   "op": "bytes",
+   "new": "7c1c",
+   "kind": "code"
+  },
+  {
+   "addr": "0x40097038",
+   "stock": "7a06",
+   "op": "bytes",
+   "new": "7a1c",
+   "kind": "code"
+  },
+  {
+   "addr": "0x40097258",
+   "stock": "06864208d6b4",
+   "op": "jsr",
+   "target": "lfo_graph_sheet_s"
+  },
+  {
+   "addr": "0x400970de",
+   "stock": "42a7123658f9",
+   "op": "jsr",
+   "target": "lfo_graph_flag_s"
+  }
+ ],
+ "resources": {
+  "core": "4.1",
+  "names": [
+   "lfo:waves",
+   "lfo:mult"
+  ]
+ },
+ "requires": [
+  "core"
+ ]
+}

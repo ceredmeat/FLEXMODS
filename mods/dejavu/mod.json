@@ -1,0 +1,110 @@
+{
+ "id": "dejavu",
+ "version": "0.5",
+ "title": "Deja Vu: looping RND LFO",
+ "category": "Sound",
+ "license": "GPL-2.0-or-later",
+ "author": "Cere, made with Claude",
+ "description": "Deja Vu, after the Octatrack mod: the LFO's RND wave plays a loop of random values. SETTINGS > RND LOOP sets how many values each LFO's loop holds (OFF, 2-8, 12, 16, 32; RND picks 16 per LFO cycle, so 16 repeats once a cycle) and RND LOCK how often a value is kept when its turn comes again (100% repeats exactly, lower lets the loop drift, 0% is stock). RND LOCK can also be set to PHAS (past 100%): then each LFO's own PHAS knob is its lock amount, per track and per LFO, parameter-lockable. RND TRIG RESTART starts each loop again on a trig (in the LFO trig modes), so it lines up with your notes. Every LFO set to RND uses them, on audio and MIDI tracks. Settings are saved and come back at power-on. Its rows sit in the MOD SETTINGS section when that mod is in the build. 0.5: RND Lock and RND Loop are in the LFO DEST list of the audio tracks (group RND), so one LFO can sweep the other's lock amount or loop length.",
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "sources": [
+  "dejavu.c",
+  "dejavu.s"
+ ],
+ "cflags": [
+  "-DSEED_A_AT=0x4020df1c",
+  "-DSEED_B_AT=0x4020df20",
+  "-DEMMC_READ_AT=0x400e2c14",
+  "-DEMMC_WRITE_AT=0x400e2dfa",
+  "-DSAVE_BLOCK=0x60040"
+ ],
+ "defsym": {
+  "STR_CTOR": "0x4017af20"
+ },
+ "sites": [
+  {
+   "addr": "0x400ed3fc",
+   "stock": "22394020df20",
+   "op": "jmp",
+   "target": "dv_rand"
+  },
+  {
+   "addr": "0x401aa2d8",
+   "stock": "ffffffffffffffff0000000000000000000000000000000100630062ffffffff0000000b00000000",
+   "op": "bytes",
+   "kind": "data",
+   "new": "000000040000002e0000000000007f000000000000000001ffffffffffffffff0000000b00000e00"
+  },
+  {
+   "addr": "0x401aa300",
+   "stock": "401c2568",
+   "op": "ptr",
+   "target": "dv_n_lock"
+  },
+  {
+   "addr": "0x401aa304",
+   "stock": "401c5bc7",
+   "op": "ptr",
+   "target": "dv_n_grp"
+  },
+  {
+   "addr": "0x401aa308",
+   "stock": "401c20af",
+   "op": "ptr",
+   "target": "dv_s_lock"
+  },
+  {
+   "addr": "0x401aa30c",
+   "stock": "ffffffffffffffff000000000000000000000000000000000078ffffffffffff0000000c00000000",
+   "op": "bytes",
+   "kind": "data",
+   "new": "000000040000002f0000000000007f000000000000000001ffffffffffffffff0000000c00000e00"
+  },
+  {
+   "addr": "0x401aa334",
+   "stock": "401c2568",
+   "op": "ptr",
+   "target": "dv_n_loop"
+  },
+  {
+   "addr": "0x401aa338",
+   "stock": "401c5bc7",
+   "op": "ptr",
+   "target": "dv_n_grp"
+  },
+  {
+   "addr": "0x401aa33c",
+   "stock": "401c20af",
+   "op": "ptr",
+   "target": "dv_s_loop"
+  }
+ ],
+ "subscribe": [
+  {
+   "event": "ev_settings",
+   "fn": "dv_settings",
+   "order": 75
+  },
+  {
+   "event": "ev_tick",
+   "fn": "dv_tick",
+   "order": 80
+  }
+ ],
+ "resources": {
+  "core": "4.1",
+  "names": [
+   "ui:SETTINGS:RND LOOP",
+   "ui:SETTINGS:RND LOCK",
+   "ui:SETTINGS:RND TRIG",
+   "emmc:0x60040"
+  ]
+ },
+ "requires": [
+  "core"
+ ],
+ "weak": [
+  "modset_closed"
+ ]
+}

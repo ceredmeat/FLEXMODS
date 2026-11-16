@@ -1,0 +1,30 @@
+{
+ "id": "ctrlall",
+ "version": "0.2",
+ "title": "Ctrl All",
+ "category": "Sequencer",
+ "license": "GPL-2.0-or-later",
+ "author": "Cere, made with Claude",
+ "description": "Ctrl All, after the Analog Rytm mod: hold TRK and press YES to turn CTRL ALL on or off (ALL shows in the top-right corner). While it is on, a parameter lock you set with a knob (hold a trig, turn a knob) is also set on the same step of every other track that has a trig there: the other audio tracks from an audio track, the other MIDI tracks from a MIDI track. Only knob turns are copied, never pastes, clears or CREATE RANDOM LOCKS.",
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "sources": ["ctrlall.c"],
+ "cflags": [
+  "-DLOCK_SET_AT=0x40013ee4",
+  "-DPATTERN_PP_AT=0x4199ec38"
+ ],
+ "sites": [
+  {"addr": "0x4002479a", "stock": "4eb940013ee4", "op": "jsr", "target": "ca_setlock"}
+ ],
+ "subscribe": [
+  {"event": "ev_key", "fn": "ctrlall_key", "order": 20},
+  {"event": "ev_enc", "fn": "ctrlall_enc", "order": 90},
+  {"event": "ev_tick", "fn": "ctrlall_tick", "order": 60},
+  {"event": "ev_draw", "fn": "ctrlall_draw", "order": 71}
+ ],
+ "resources": {
+  "core": "4.1",
+  "names": ["key:TRK+YES"]
+ },
+ "requires": ["core"]
+}

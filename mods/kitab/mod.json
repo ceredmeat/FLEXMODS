@@ -1,0 +1,29 @@
+{
+ "id": "kitab",
+ "version": "0.2",
+ "title": "Kit A/B",
+ "category": "Workflow",
+ "license": "GPL-2.0-or-later",
+ "author": "Cere, made with Claude",
+ "description": "Kit A/B, after the Analog Rytm mod: hold TRK and press NO to hear the active pattern's temp-saved kit (B, what FUNC+NO would bring back) while your edited kit (A) is kept aside; TRK+NO again brings your edits back. The temp copy is never overwritten, so FUNC+YES and FUNC+NO work as before. A small B shows in the top-right corner while B plays. Changing pattern while B plays puts your edits back into the pattern you left.",
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "sources": ["kitab.c"],
+ "cflags": [
+  "-DPROJECT_AT=0x40138882",
+  "-DUI_STATE_AT=0x401389c4",
+  "-DCUR_PAT_AT=0x40092890",
+  "-DRELOAD_AT=0x40017c16",
+  "-DKIT_CHANGED_AT=0x4013c42c"
+ ],
+ "subscribe": [
+  {"event": "ev_key", "fn": "kitab_key", "order": 20},
+  {"event": "ev_tick", "fn": "kitab_tick", "order": 60},
+  {"event": "ev_draw", "fn": "kitab_draw", "order": 70}
+ ],
+ "resources": {
+  "core": "4.1",
+  "names": ["key:TRK+NO"]
+ },
+ "requires": ["core"]
+}

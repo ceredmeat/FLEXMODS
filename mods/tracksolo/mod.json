@@ -1,0 +1,26 @@
+{
+ "id": "tracksolo",
+ "version": "0.2",
+ "title": "Track Solo",
+ "category": "Performance",
+ "license": "GPL-2.0-or-later",
+ "author": "Cere, made with Claude",
+ "description": "Track Solo, after the Octatrack mod: hold TRK, then hold UP, and the active track plays alone until you let go of UP; TRK + DOWN latches the solo (again to unlatch, or on another track to move it). The other tracks' note trigs simply don't fire, so sounding notes ring out and the stock mutes are never touched. S and the track number show in the top-right corner. Needs seq-events.",
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "sources": ["tracksolo.c"],
+ "cflags": [
+  "-DACTIVE_TRACK_AT=0x4197c6b4"
+ ],
+ "subscribe": [
+  {"event": "ev_fire_trig", "fn": "solo_trig", "order": 80},
+  {"event": "ev_key", "fn": "solo_key", "order": 20},
+  {"event": "ev_tick", "fn": "solo_tick", "order": 60},
+  {"event": "ev_draw", "fn": "solo_draw", "order": 72}
+ ],
+ "resources": {
+  "core": "4.1",
+  "names": ["key:TRK+UP", "key:TRK+DOWN"]
+ },
+ "requires": ["core", "seq-events"]
+}
