@@ -1,0 +1,65 @@
+{
+ "id": "multitrig",
+ "version": "0.5",
+ "title": "MULTITRIG: page and track-wide lock editing",
+ "category": "Sequencer",
+ "license": "GPL-2.0-or-later",
+ "author": "Cere, made with Claude",
+ "description": "In GRID RECORDING: hold a trig and tap PAGE (every trig on its page) or TRK (every trig on the track), then turn a knob to edit them all. SETTINGS > MULTI EDIT: REL keeps each trig's own value and moves them together (transpose a page or a track); ABS gives them all the held trig's value. Letting go clears the selection. The setting is saved.",
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "sources": [
+  "multitrig.c",
+  "multitrig.s"
+ ],
+ "cflags": [
+  "-DEMMC_READ_AT=0x400e2c14",
+  "-DEMMC_WRITE_AT=0x400e2dfa",
+  "-DSAVE_BLOCK=0x60045"
+ ],
+ "defsym": {
+  "STR_CTOR": "0x4017af20"
+ },
+ "sites": [
+  {
+   "addr": "0x400315de",
+   "stock": "40031386",
+   "op": "ptr",
+   "target": "mt_invoke"
+  }
+ ],
+ "subscribe": [
+  {
+   "event": "ev_key",
+   "fn": "mt_key",
+   "order": 3
+  },
+  {
+   "event": "ev_enc",
+   "fn": "mt_enc",
+   "order": 5
+  },
+  {
+   "event": "ev_settings",
+   "fn": "mt_settings",
+   "order": 78
+  },
+  {
+   "event": "ev_tick",
+   "fn": "mt_tick",
+   "order": 82
+  }
+ ],
+ "resources": {
+  "core": "4.1",
+  "names": [
+   "emmc:0x60045"
+  ]
+ },
+ "requires": [
+  "core"
+ ],
+ "weak": [
+  "modset_closed"
+ ]
+}

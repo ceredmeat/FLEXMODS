@@ -14,6 +14,7 @@ its own `.elemod`: pick the ones you want in Elekloader, build your OS and flash
 | Track Solo | `tracksolo-0.2.elemod` | TRK+UP solos the active track while held, TRK+DOWN latches it (after the Octatrack mod) | core, seq-events |
 | Velocity Humanise | `humanise-0.2.elemod` | Random velocity variation per track, amount set in SETTINGS (after the Analog Rytm mod) | core, seq-events |
 | Euclid Accents | `euclidacc-0.2.elemod` | A Euclidean rhythm accents the trigs you already have (1-16 accents per track, DEPTH sets how much); the pattern never changes (after the Analog Rytm mod) | core, seq-events |
+| MULTITRIG | `multitrig-0.5.elemod` | In grid recording, hold a trig and tap TRK (whole track) or PAGE (that page), then turn a knob to edit all those trigs at once; SETTINGS > MULTI EDIT: REL moves them together (transpose), ABS gives them the held trig's value | core |
 | MOD SETTINGS | `modsettings-0.1.elemod` | Optional: folds the Deja Vu, Humanise and Euclid Accents rows in SETTINGS into one MOD SETTINGS row | core |
 
 The `.elemod` files are in the [releases](../../releases). The source of each mod, with a README
