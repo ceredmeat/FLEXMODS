@@ -83,8 +83,8 @@ closing with a soft, organic decay, like the vactrol in a Buchla.
 
 ## Tested on a unit
 
-Tested on a Digitakt MKI, OS 1.54: all four types on drum tracks, levels kept even, and settings
-surviving a power cycle.
+Tested on a Digitakt MKI, OS 1.54: all four types on drum tracks, levels kept even, settings
+surviving a power cycle, and the low pass gate (0.5).
 
 ---
 
