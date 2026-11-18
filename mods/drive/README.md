@@ -1,9 +1,10 @@
 # DRIVE for the Digitakt MKI
 
 A saturation of its own on each audio track, before the track's filter: tape warmth, tube grit,
-fuzz or a wavefolder.
+fuzz or a wavefolder. New in 0.5: a **low pass gate** after it, the Buchla-style gate from VILNIS, on
+any track.
 
-- **Mod:** `drive` 0.4, for Elekloader
+- **Mod:** `drive` 0.5, for Elekloader
 - **Digitakt MKI, OS 1.54 only**
 - **Needs in the build:** `core` (4.1 or later)
 
@@ -28,6 +29,24 @@ The page always edits the **active** track. Change track and the knobs show that
 | C | **TON** | The tone after the drive: a low pass from dark to fully open. |
 | D | **MIX** | Dry to fully driven. |
 | E | **LVL** | The output level. The types are already kept at about the same loudness; use this to fine-tune. |
+| F | **LPG** | The low pass gate: **OFF**, **LP** (the sound darkens as it dies), **VCA** (it fades) or **BTH** (both: the classic Buchla "bongo"). |
+| G | **DCY** | How fast the gate closes, from short plucks to long rings. |
+| H | **RES** | The gate's resonance, for a sharper, wetter pluck. |
+
+---
+
+## The low pass gate (F–H)
+
+A low pass gate is a filter and a volume control that move together, opened by each hit and
+closing with a soft, organic decay, like the vactrol in a Buchla.
+
+- **Every hit on the track strikes it:** sequenced trigs, live presses and retrigs. Harder hits
+  open it further.
+- **It comes after the drive**, so you can drive into it, or set TYP to OFF and use only the gate.
+- **With VCA or BTH, the sound only lives inside the gate's decay.** That's how a low pass gate
+  works: turn up DCY for longer sounds.
+- **Try it on sustained sounds:** a pad, a chord sample or a held synth note on BTH with DCY
+  around 40 turns every hit into a woody pluck.
 
 ---
 
@@ -42,13 +61,23 @@ The page always edits the **active** track. Change track and the knobs show that
 
 ## Good to know
 
-- **It's per track:** each of the eight audio tracks has its own drive settings.
+- **It's per track:** each of the eight audio tracks has its own drive and gate settings.
 - **It sits before the filter**, so the track's filter can tame a harsh drive.
-- **Saved:** all eight tracks' settings are saved about 2 seconds after a change, in one block of
+- **Saved:** all eight tracks' settings are saved about 2 seconds after a change (settings saved
+  by 0.4 carry over, with the gate OFF), in one block of
   the internal storage (eMMC block `0x6004a`) that the stock firmware doesn't use, and come back
   at power-on.
 - **Processing cost:** driving all eight tracks uses some extra processing. If you hear crackles
   in a very busy project, turn the drive off on tracks that don't need it.
+
+---
+
+## Changes
+
+| Version | What changed |
+|---|---|
+| 0.5 | The low pass gate (F–H). |
+| 0.4 | Smaller page code; the sound is unchanged. |
 
 ---
 

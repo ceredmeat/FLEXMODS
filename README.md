@@ -40,7 +40,7 @@ Each mod is its own `.elemod`: pick the ones you want in Elekloader, build your 
 | Mod | File | What it does | Needs |
 |---|---|---|---|
 | DJ FILTER | `djfilter-0.7.elemod` | A stereo master filter after the Electrix FilterFactory: one-knob DJ sweeps, resonance, BUZZ drive, an LFO or envelope follower, tempo sync | core, seq-events |
-| DRIVE | `drive-0.4.elemod` | Per-track saturation before the filter: tape, tube, fuzz or wavefolder, with tone, mix and level | core |
+| DRIVE | `drive-0.5.elemod` | Per-track saturation before the filter (tape, tube, fuzz or wavefolder) and a Buchla-style low pass gate after it, struck by every hit | core |
 
 ### LFOs and modulation
 
