@@ -1,0 +1,67 @@
+{
+ "id": "fill",
+ "version": "0.1",
+ "title": "FILL: hold for a random variation",
+ "category": "Sequencer",
+ "license": "GPL-2.0-or-later",
+ "author": "Cere, made with Claude",
+ "description": "Hold YES, then hold NO: while NO is held the pattern plays a random variation of itself, new each loop: steps shuffled with their neighbours, ghost notes on empty steps, some trigs left out (never the first of each half bar), velocities moved. Let go and it plays as it is; the pattern never changes. While held, any knob sets how wild it is (0-100 %, saved). Audio tracks. Needs seq-events.",
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "sources": [
+  "fill.c"
+ ],
+ "cflags": [
+  "-DEMMC_READ_AT=0x400e2c14",
+  "-DEMMC_WRITE_AT=0x400e2dfa",
+  "-DSAVE_BLOCK=0x60048",
+  "-Os"
+ ],
+ "subscribe": [
+  {
+   "event": "ev_fire_step",
+   "fn": "fl_fire_step",
+   "order": 50
+  },
+  {
+   "event": "ev_gen_trig",
+   "fn": "fl_gen_trig",
+   "order": 50
+  },
+  {
+   "event": "ev_fire_vel",
+   "fn": "fl_fire_vel",
+   "order": 50
+  },
+  {
+   "event": "ev_tick",
+   "fn": "fl_tick",
+   "order": 85
+  },
+  {
+   "event": "ev_key",
+   "fn": "fl_key",
+   "order": 2
+  },
+  {
+   "event": "ev_enc",
+   "fn": "fl_enc",
+   "order": 2
+  },
+  {
+   "event": "ev_draw",
+   "fn": "fl_draw",
+   "order": 92
+  }
+ ],
+ "resources": {
+  "core": "4.1",
+  "names": [
+   "emmc:0x60048"
+  ]
+ },
+ "requires": [
+  "core",
+  "seq-events"
+ ]
+}

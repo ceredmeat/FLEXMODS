@@ -1,6 +1,6 @@
 # flexmods
 
-Twenty Elekloader mods for the **Elektron Digitakt MKI, OS 1.54**, made by Cere (with Claude).
+Twenty-two Elekloader mods for the **Elektron Digitakt MKI, OS 1.54**, made by Cere (with Claude).
 Each mod is its own `.elemod`: pick the ones you want in Elekloader, build your OS and flash it.
 
 **Download:** the `.elemod` files are in the [latest release](../../releases/latest).
@@ -18,6 +18,7 @@ Each mod is its own `.elemod`: pick the ones you want in Elekloader, build your 
 | SCENES | `scenes-0.1.elemod` | Octatrack-style scenes A and B with a crossfader: record knob moves on any tracks into a scene, then morph between them (TRK + FUNC) | core |
 | DENSITY | `density-0.2.elemod` | One knob for how busy the pattern is: left drops trigs, right adds ghost notes, the middle plays it as written; can keep the downbeats | core, seq-events |
 | KIT A/B | `kitab-0.2.elemod` | TRK + NO flips between your edited kit and the pattern's temp-saved kit (after the Analog Rytm) | core |
+| FILL | `fill-0.1.elemod` | Hold YES, then NO: the pattern plays a random variation of itself (shuffles, ghost notes, drops, accents), new each loop; let go and it's back. Any knob sets how wild | core, seq-events |
 | MUTE SNAPSHOTS | `mutesnap-0.1.elemod` | YES + trig 1–4 saves the mutes, NO + trig 1–4 recalls them at the end of the bar | core, seq-events |
 | TRACK SOLO | `tracksolo-0.2.elemod` | TRK + UP solos the active track while held, TRK + DOWN latches it (after the Octatrack) | core, seq-events |
 
@@ -28,6 +29,7 @@ Each mod is its own `.elemod`: pick the ones you want in Elekloader, build your 
 | FREQSEQ | `freqseq-0.5.elemod` | A generative sequencer on every track: 15 of them, from a Turing Machine and Grids to Game of Life, sample roulette and Morse code | core, seq-events |
 | POLYMETER | `polymeter-0.1.elemod` | Every track's length and speed on one page, with moving playheads and one-turn polymeter presets | core, seq-events |
 | REVERSE | `reverse-0.4.elemod` | A chance per track that a trig plays its sample backwards | core, seq-events |
+| MIDI ARP | `midiarp-0.1.elemod` | An arpeggiator on each MIDI track, in time: a trig's chord or the notes you hold, UP/DOWN/UPDN/RND, 1/16-1/4, 1-3 octaves | core, seq-events |
 | EUCLID ACCENTS | `euclidacc-0.2.elemod` | A Euclidean rhythm accents the trigs you already have (1–16 accents per track, DEPTH sets how much) | core, seq-events |
 | VELOCITY HUMANISE | `humanise-0.2.elemod` | Random velocity variation per track, set in SETTINGS (after the Analog Rytm) | core, seq-events |
 | MULTITRIG | `multitrig-0.5.elemod` | In grid recording, hold a trig and tap TRK (whole track) or PAGE (that page), then turn a knob to edit all those trigs' locks at once | core |
@@ -53,7 +55,7 @@ Each mod is its own `.elemod`: pick the ones you want in Elekloader, build your 
 |---|---|---|---|
 | VISUALS | `visuals-0.3.elemod` | A beat radar, a pet that lives on your music, Snake, Pong (1 or 2 players), and CRT and flash screen effects | core, seq-events |
 | REAL UNITS | `realunits-0.2.elemod` | Filter FREQ in Hz, envelope times in ms/s, LFO speed as a cycle length or Hz | core |
-| MOD SETTINGS | `modsettings-0.1.elemod` | Optional: folds the DEJA VU, HUMANISE and EUCLID ACCENTS rows in SETTINGS into one MOD SETTINGS row | core |
+| MOD SETTINGS | `modsettings-0.1.elemod` | Optional: folds the DEJA VU, HUMANISE, EUCLID ACCENTS and MIDI ARP rows in SETTINGS into one MOD SETTINGS row | core |
 
 ---
 
@@ -69,12 +71,12 @@ Each mod is its own `.elemod`: pick the ones you want in Elekloader, build your 
 ## Good to know
 
 - **Mix and match:** every mod works on its own and together with the others.
-- **Memory:** with all twenty in one build, the OS is close to its memory limit. If Elekloader
+- **Memory:** with all twenty-two in one build, the OS is close to its memory limit. If Elekloader
   says the mods don't fit, leave out the ones you don't use. VISUALS (about 11 KB) and FREQSEQ are
   the biggest.
 - **Key combinations:** several mods use TRK + a key. They're chosen not to clash: TRK + UP/DOWN
-  is TRACK SOLO, TRK + YES is CTRL ALL, TRK + NO is KIT A/B, TRK + FUNC is SCENES, TRK + PAGE is FREQSEQ, and
-  NO + PAGE is TRIG MODES.
+  is TRACK SOLO, TRK + YES is CTRL ALL, TRK + NO is KIT A/B, TRK + FUNC is SCENES, TRK + PAGE is FREQSEQ, 
+  NO + PAGE is TRIG MODES, and YES then NO (held) is FILL.
 - **Master pages:** DJ FILTER, DENSITY, DRIVE, REVERSE, POLYMETER and VISUALS live after the stock
   master pages: press FUNC + LFO, then step with LEFT/RIGHT.
 
