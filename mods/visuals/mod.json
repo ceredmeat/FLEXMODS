@@ -1,0 +1,124 @@
+{
+ "id": "visuals",
+ "version": "0.3",
+ "title": "VISUALS: beat radar, a pet, Snake, Pong and screen effects",
+ "category": "Looks",
+ "license": "GPL-2.0-or-later",
+ "author": "Cere, made with Claude",
+ "description": "Eye candy. Master pages (FUNC + LFO, then LEFT/RIGHT): RDR a beat radar (a sweep round the active track's loop, blips for each hit at its track's place, track 1 inside, 8 outside), PET a little creature that dances to the music and sleeps in silence (turn a knob to pet it), SNK Snake in time with the pattern, PNG Pong against the Digitakt (knob A or UP/DOWN), with knob H playing a track's sound on each catch, and SCR the screen effects, saved: CRT (a rolling refresh line; FUL adds the old-TV power off and on at stop and play, and glitches) and INV (the whole screen flashes on loud hits, beat 1 or track 1). Needs seq-events.",
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "sources": [
+  "visuals.c"
+ ],
+ "cflags": [
+  "-Os",
+  "-DEMMC_READ_AT=0x400e2c14",
+  "-DEMMC_WRITE_AT=0x400e2dfa",
+  "-DSAVE_BLOCK=0x6004c"
+ ],
+ "subscribe": [
+  {
+   "event": "ev_tick",
+   "fn": "vs_tick",
+   "order": 91
+  },
+  {
+   "event": "ev_draw",
+   "fn": "vs_draw",
+   "order": 99
+  },
+  {
+   "event": "ev_fire_vel",
+   "fn": "vs_fire",
+   "order": 96
+  },
+  {
+   "event": "ev_gen_trig",
+   "fn": "vs_step",
+   "order": 96
+  }
+ ],
+ "contribute": [
+  {
+   "to": "core_mpages",
+   "order": 65,
+   "data": "00000000",
+   "relocs": [
+    [
+     0,
+     "abs32",
+     "sym:vs_rdr",
+     0
+    ]
+   ]
+  },
+  {
+   "to": "core_mpages",
+   "order": 66,
+   "data": "00000000",
+   "relocs": [
+    [
+     0,
+     "abs32",
+     "sym:vs_pet",
+     0
+    ]
+   ]
+  },
+  {
+   "to": "core_mpages",
+   "order": 67,
+   "data": "00000000",
+   "relocs": [
+    [
+     0,
+     "abs32",
+     "sym:vs_snk",
+     0
+    ]
+   ]
+  },
+  {
+   "to": "core_mpages",
+   "order": 68,
+   "data": "00000000",
+   "relocs": [
+    [
+     0,
+     "abs32",
+     "sym:vs_png",
+     0
+    ]
+   ]
+  },
+  {
+   "to": "core_mpages",
+   "order": 69,
+   "data": "00000000",
+   "relocs": [
+    [
+     0,
+     "abs32",
+     "sym:vs_scr",
+     0
+    ]
+   ]
+  }
+ ],
+ "requires": [
+  "core",
+  "seq-events"
+ ],
+ "resources": {
+  "names": [
+   "ui:master page RDR",
+   "ui:master page PET",
+   "ui:master page SNK",
+   "ui:master page PNG",
+   "ui:master page SCR",
+   "emmc:0x6004c"
+  ],
+  "core": "4.2"
+ }
+}

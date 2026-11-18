@@ -1,0 +1,89 @@
+{
+ "id": "freqseq",
+ "version": "0.5",
+ "title": "FREQSEQ: a generative sequencer on every track",
+ "category": "Sequencer",
+ "license": "GPL-3.0-or-later",
+ "author": "Cere, made with Claude",
+ "description": "FREQSEQ: each of the 16 tracks can run its own generative sequencer, with its own settings: POLY (Subharmonicon-style polyrhythms with 4-step pitch sequences), CORRUPT (Labyrinth-style mutation of notes, velocities, filter, resonance and pan), TURING (Turing Machine loops, notes and rhythm), DRUNK (backwards, ping-pong, random or staggering playhead), LIFE (Conway's Game of Life on the LIFE tracks' trigs), EROSION (trigs fade away loop by loop, then come back), MARKOV (learns which note follows which from the track and what you play) GRIDS (Mutable Instruments Grids drum maps), CANON (copies another track later, transposed), ROULETTE (a random sample a trig), SCATTER (random start points, on a slice grid), WOLFRAM (1D cellular automaton rules), MATHS (pi, Fibonacci, primes), MORSE (a word as rhythm) and BERNOULLI (trigs split between two tracks). A FEEL page sets scale lock, root, humanise and groove for all of them. TRK + PAGE opens it for the active track: LEFT/RIGHT picks the sequencer, the knobs set it, YES its action, DOWN/UP the FEEL page, NO closes. The pattern never changes. Saved; SUBSEQ settings carry over. Grids' drum maps are Emilie Gillet's (GPL v3). Needs seq-events. 0.5: locks that land on exactly 0 (sample 0, start 0, a fully closed FREQ) are no longer skipped.",
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "sources": [
+  "freqseq.c"
+ ],
+ "cflags": [
+  "-DEMMC_READ_AT=0x400e2c14",
+  "-DEMMC_WRITE_AT=0x400e2dfa",
+  "-DSAVE_BLOCK=0x60046",
+  "-Os",
+  "-DSAVE_BLOCK2=0x60049"
+ ],
+ "subscribe": [
+  {
+   "event": "ev_fire_step",
+   "fn": "ss_fire_step",
+   "order": 40
+  },
+  {
+   "event": "ev_gen_trig",
+   "fn": "ss_gen_trig",
+   "order": 40
+  },
+  {
+   "event": "ev_gen_notes",
+   "fn": "ss_gen_notes",
+   "order": 40
+  },
+  {
+   "event": "ev_fire_notes",
+   "fn": "ss_fire_notes",
+   "order": 40
+  },
+  {
+   "event": "ev_fire_vel",
+   "fn": "ss_fire_vel",
+   "order": 40
+  },
+  {
+   "event": "ev_fire_locks",
+   "fn": "ss_fire_locks",
+   "order": 40
+  },
+  {
+   "event": "ev_live_note",
+   "fn": "ss_live_note",
+   "order": 40
+  },
+  {
+   "event": "ev_tick",
+   "fn": "ss_tick",
+   "order": 83
+  },
+  {
+   "event": "ev_key",
+   "fn": "ss_key",
+   "order": 4
+  },
+  {
+   "event": "ev_enc",
+   "fn": "ss_enc",
+   "order": 4
+  },
+  {
+   "event": "ev_draw",
+   "fn": "ss_draw",
+   "order": 90
+  }
+ ],
+ "resources": {
+  "core": "4.2",
+  "names": [
+   "emmc:0x60046",
+   "emmc:0x60049"
+  ]
+ },
+ "requires": [
+  "core",
+  "seq-events"
+ ]
+}

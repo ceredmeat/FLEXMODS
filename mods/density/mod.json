@@ -1,0 +1,59 @@
+{
+ "id": "density",
+ "version": "0.2",
+ "title": "DENSITY: one knob for how busy the pattern is",
+ "category": "Performance",
+ "description": "A master page (FUNC + LFO) with one density knob for the whole pattern: the middle plays it as it is, left drops trigs out, right adds ghost notes on empty steps. DWN keeps the downbeats, GHV sets the ghosts' velocity, NEW picks new steps each loop or keeps the same, TRK chooses all, audio, MIDI or all but track 1. The page shows what plays. Needs seq-events.",
+ "sources": [
+  "density.c"
+ ],
+ "cflags": [
+  "-Os"
+ ],
+ "subscribe": [
+  {
+   "event": "ev_gen_trig",
+   "fn": "dn_gen_trig",
+   "order": 70
+  },
+  {
+   "event": "ev_fire_vel",
+   "fn": "dn_fire_vel",
+   "order": 70
+  },
+  {
+   "event": "ev_tick",
+   "fn": "dn_tick",
+   "order": 89
+  }
+ ],
+ "contribute": [
+  {
+   "to": "core_mpages",
+   "order": 61,
+   "data": "00000000",
+   "relocs": [
+    [
+     0,
+     "abs32",
+     "sym:dn_page",
+     0
+    ]
+   ]
+  }
+ ],
+ "requires": [
+  "core",
+  "seq-events"
+ ],
+ "resources": {
+  "names": [
+   "ui:master page DNS"
+  ],
+  "core": "4.1"
+ },
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "license": "GPL-2.0-or-later",
+ "author": "Cere, made with Claude"
+}

@@ -1,0 +1,61 @@
+{
+ "id": "djfilter",
+ "version": "0.7",
+ "title": "DJ FILTER: master filter after the Electrix FilterFactory",
+ "category": "Master",
+ "license": "GPL-2.0-or-later",
+ "author": "Cere, made with Claude",
+ "description": "A stereo master filter on its own master page (FUNC + LFO, after the stock pages; LEFT / RIGHT step through the master pages), after the Electrix FilterFactory: A the DJ knob (middle off, left low pass, right high pass) or the cutoff, B resonance, C type (DJ, DJ4, LP, LP4, HP, HP4, BP, NTCH; the 4s are 24 dB), D BUZZ drive, E the LFO's wave (TRI, SAW, SQR, RND, or ENV, an envelope follower), F its rate, G its depth (either way), H the effect mix. It filters the whole mix on every output. CLEAR resets it; it starts off. 0.6: the page's code is built smaller (the sound is unchanged), and the knobs are shared as djfilter_kv so other mods can follow the filter. 0.7: SYNC: YES on the page switches the LFO between FREE (RATE in Hz) and SYNC (RATE in note values from 8 bars to 1/32, with dotted and triplet ones), locked to the sequencer's steps.",
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "sources": [
+  "djfilter.c"
+ ],
+ "subscribe": [
+  {
+   "event": "ev_render_master",
+   "fn": "df_render",
+   "order": 60
+  },
+  {
+   "event": "ev_tick",
+   "fn": "df_tick",
+   "order": 87
+  },
+  {
+   "event": "ev_key",
+   "fn": "df_any_key",
+   "order": 6
+  },
+  {
+   "event": "ev_gen_trig",
+   "fn": "df_step",
+   "order": 97
+  }
+ ],
+ "contribute": [
+  {
+   "to": "core_mpages",
+   "order": 60,
+   "data": "00000000",
+   "relocs": [
+    [
+     0,
+     "abs32",
+     "sym:df_page",
+     0
+    ]
+   ]
+  }
+ ],
+ "requires": [
+  "core",
+  "seq-events"
+ ],
+ "resources": {
+  "names": [
+   "ui:master page DJF"
+  ],
+  "core": "4.1"
+ }
+}

@@ -1,0 +1,56 @@
+{
+ "id": "drive",
+ "version": "0.4",
+ "title": "DRIVE: a saturation on each track",
+ "category": "Effects",
+ "description": "A master page (FUNC + LFO) that gives the active audio track a drive of its own before its filter: TAPE, TUBE, FUZZ or FOLD, with amount, tone, mix and level; the page draws the curve and lists the eight tracks' drives. Saved. 0.4: the page's code is built smaller; the sound is unchanged.",
+ "sources": [
+  "drive.c"
+ ],
+ "cflags": [
+  "-DEMMC_READ_AT=0x400e2c14",
+  "-DEMMC_WRITE_AT=0x400e2dfa",
+  "-DSAVE_BLOCK=0x6004a"
+ ],
+ "subscribe": [
+  {
+   "event": "ev_render_voices",
+   "fn": "dr_render",
+   "order": 80
+  },
+  {
+   "event": "ev_tick",
+   "fn": "dr_tick",
+   "order": 89
+  }
+ ],
+ "contribute": [
+  {
+   "to": "core_mpages",
+   "order": 62,
+   "data": "00000000",
+   "relocs": [
+    [
+     0,
+     "abs32",
+     "sym:dr_page",
+     0
+    ]
+   ]
+  }
+ ],
+ "requires": [
+  "core"
+ ],
+ "resources": {
+  "names": [
+   "ui:master page DRV",
+   "emmc:0x6004a"
+  ],
+  "core": "4.1"
+ },
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "license": "GPL-2.0-or-later",
+ "author": "Cere, made with Claude"
+}

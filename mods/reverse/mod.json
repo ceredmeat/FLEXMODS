@@ -1,0 +1,58 @@
+{
+ "id": "reverse",
+ "version": "0.4",
+ "title": "REVERSE: a chance a trig plays backwards",
+ "category": "Sequencer",
+ "description": "A master page (FUNC + LFO) where knobs A-H set, for tracks 1-8, the chance that a trig plays its sample backwards (a PLAY lock, flipped from the sound's). The page flashes an arrow as a track plays one backwards. Saved. Needs seq-events. 0.3: fixed: trigs really play backwards (0.2 switched forward to forward loop instead).",
+ "sources": [
+  "reverse.c"
+ ],
+ "cflags": [
+  "-Os",
+  "-DEMMC_READ_AT=0x400e2c14",
+  "-DEMMC_WRITE_AT=0x400e2dfa",
+  "-DSAVE_BLOCK=0x6004b"
+ ],
+ "subscribe": [
+  {
+   "event": "ev_fire_locks",
+   "fn": "rv_fire_locks",
+   "order": 70
+  },
+  {
+   "event": "ev_tick",
+   "fn": "rv_tick",
+   "order": 89
+  }
+ ],
+ "contribute": [
+  {
+   "to": "core_mpages",
+   "order": 63,
+   "data": "00000000",
+   "relocs": [
+    [
+     0,
+     "abs32",
+     "sym:rv_page",
+     0
+    ]
+   ]
+  }
+ ],
+ "requires": [
+  "core",
+  "seq-events"
+ ],
+ "resources": {
+  "names": [
+   "ui:master page REV",
+   "emmc:0x6004b"
+  ],
+  "core": "4.1"
+ },
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "license": "GPL-2.0-or-later",
+ "author": "Cere, made with Claude"
+}

@@ -1,0 +1,49 @@
+{
+ "id": "polymeter",
+ "version": "0.1",
+ "title": "POLYMETER: every track's length and speed on one page",
+ "category": "Sequencer",
+ "description": "A master page (FUNC + LFO, PLY): tracks 1-8 as lanes as long as their lengths, with moving playheads; knobs for the active track's length and speed, the pattern's scale mode and master length, and one-turn polymeter presets (16, DWN, PRM, 3V4). Edits the pattern itself, as the stock scale menu does, so it saves with the pattern.",
+ "sources": [
+  "polymeter.c"
+ ],
+ "cflags": [
+  "-Os"
+ ],
+ "subscribe": [
+  {
+   "event": "ev_tick",
+   "fn": "pl_tick",
+   "order": 90
+  }
+ ],
+ "contribute": [
+  {
+   "to": "core_mpages",
+   "order": 64,
+   "data": "00000000",
+   "relocs": [
+    [
+     0,
+     "abs32",
+     "sym:pl_page",
+     0
+    ]
+   ]
+  }
+ ],
+ "requires": [
+  "core",
+  "seq-events"
+ ],
+ "resources": {
+  "names": [
+   "ui:master page PLY"
+  ],
+  "core": "4.1"
+ },
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "license": "GPL-2.0-or-later",
+ "author": "Cere, made with Claude"
+}
