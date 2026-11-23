@@ -206,8 +206,8 @@ void st_draw(void *bmp, void *ctrl)
     uint32_t bits = sel ? steps[t][sel] : 0;
     if (!sel) {
         uint64_t st = sq_stored(t);
-        for (int32_t s = 0; s < SQ_STEPS; s++)
-            if ((st >> s) & 1u) bits |= 1u << (s & 15);
+        uint32_t lo = (uint32_t)st, hi = (uint32_t)(st >> 32);   /* a fixed shift: no libgcc call */
+        bits = (lo | lo >> 16 | hi | hi >> 16) & 0xffffu;          /* any of the 4 pages, folded onto 16 */
     }
     uint32_t last = sq_clock[t].last;
     for (int32_t s = 0; s < 16; s++) {
