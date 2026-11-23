@@ -1,0 +1,56 @@
+{
+ "id": "subtracks",
+ "version": "0.1",
+ "title": "SUBTRACKS: four lanes on a track (test build)",
+ "category": "Sequencer",
+ "license": "GPL-2.0-or-later",
+ "author": "Cere, made with Claude",
+ "description": "After the Tonverk's Subtracks: every audio track gets four lanes sharing its one voice. Lane 1 is the track itself; lanes 2-4 are 16-step lanes, each with its own sample, TUNE, STRT, LEV, FREQ, RESO and PAN, played as locks. A hit cuts the one before; two lanes on one step, the lowest plays. TRK twice opens the SUB page: UP/DOWN picks the lane, the trig keys set its steps, knobs A-G its settings (-- follows the track), FUNC + trig 1-4 mutes a lane, NO closes. 0.1 tests the playback: the lanes are shared by all patterns and not saved yet. Needs seq-events.",
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "sources": [
+  "subtracks.c"
+ ],
+ "cflags": [
+  "-Os"
+ ],
+ "subscribe": [
+  {
+   "event": "ev_gen_trig",
+   "fn": "st_gen_trig",
+   "order": 35
+  },
+  {
+   "event": "ev_fire_locks",
+   "fn": "st_fire_locks",
+   "order": 30
+  },
+  {
+   "event": "ev_tick",
+   "fn": "st_tick",
+   "order": 84
+  },
+  {
+   "event": "ev_key",
+   "fn": "st_key",
+   "order": 3
+  },
+  {
+   "event": "ev_enc",
+   "fn": "st_enc",
+   "order": 3
+  },
+  {
+   "event": "ev_draw",
+   "fn": "st_draw",
+   "order": 91
+  }
+ ],
+ "resources": {
+  "core": "4.1"
+ },
+ "requires": [
+  "core",
+  "seq-events"
+ ]
+}
