@@ -29,3 +29,10 @@ the mod checks whether its step lands on a Euclidean accent (a simple bit of ari
 the velocity up or down.
 
 Needs **seq-events** in the same build.
+
+## Changes
+
+| Version | What changed |
+|---|---|
+| 0.3 | The save buffer is borrowed from the Digitakt's spare memory only while loading or saving, which leaves more RAM for your other mods. |
+

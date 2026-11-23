@@ -17,6 +17,7 @@
  *     the held trig, edits the selected ones with the same routine (REL) or writes the held trig's
  *     new value with the page's own lock routine (ABS). */
 #include <stdint.h>
+#include "../common/heapbuf.h"
 #include "digitakt-mk1/core3.h"
 
 static volatile uint8_t set_abs;                      /* SETTINGS > MULTI EDIT: 0 REL, 1 ABS */
@@ -127,7 +128,7 @@ typedef int32_t (*emmc_fn)(int32_t block, int32_t bytes, void *buf);
 #define EMMC_WRITE ((emmc_fn)EMMC_WRITE_AT)
 #define SAVE_MAGIC 0x4d545247u                          /* "MTRG" */
 struct save { uint32_t magic; uint8_t version, abs, pad[2]; uint32_t sum; };
-static uint8_t block[512] __attribute__((aligned(16)));
+HEAP_BUF(block, 512)          /* borrowed from the heap while loading or saving */
 static int32_t save_wait, loaded, ticks;
 
 static uint32_t checksum(const uint8_t *p, int32_t n)
@@ -139,6 +140,7 @@ static uint32_t checksum(const uint8_t *p, int32_t n)
 }
 static void load(void)
 {
+    if (!block_ready()) return;
     struct save *s = (struct save *)block;
     for (int32_t i = 0; i < 512; i++) block[i] = 0;
     if (EMMC_READ(SAVE_BLOCK, 512, block) != 0)
@@ -150,6 +152,7 @@ static void load(void)
 }
 static void save(void)
 {
+    if (!block_ready()) return;
     struct save *s = (struct save *)block;
     for (int32_t i = 0; i < 512; i++) block[i] = 0;
     s->magic = SAVE_MAGIC;

@@ -1,4 +1,4 @@
-# MIDI Arp 0.1 (Digitakt MKI, OS 1.54)
+# MIDI Arp 0.2 (Digitakt MKI, OS 1.54)
 
 An arpeggiator on each MIDI track. It runs in time with the sequencer, for the trigs in your pattern
 and for notes you hold.
@@ -37,3 +37,10 @@ Each MIDI track has its own three settings; they are saved on the unit.
   any trig, and follows the track's scale/speed.
 - The arp's extra notes are not written into the pattern.
 - Needs **seq-events** and core 4.2 or newer.
+
+## Changes
+
+| Version | What changed |
+|---|---|
+| 0.2 | The save buffer is borrowed from the Digitakt's spare memory only while loading or saving, which leaves more RAM for your other mods. |
+

@@ -3,7 +3,7 @@
 A chance, per track, that a trig plays its sample backwards. Set a track to 30% and roughly one
 hit in three flips around, differently every time.
 
-- **Mod:** `reverse` 0.4, for Elekloader
+- **Mod:** `reverse` 0.5, for Elekloader
 - **Digitakt MKI, OS 1.54 only**
 - **Needs in the build:** `core` (4.1 or later) and `seq-events`
 
@@ -58,6 +58,7 @@ one-shot repeated. 0.4 fixes it.
 
 | Version | What changed |
 |---|---|
+| 0.5 | With PROJECT LINK in the build, the settings go with the project: saved when you save it, back when you load it, defaults for a new project (not yet confirmed on a unit). The save buffer is borrowed from the Digitakt's spare memory only while loading or saving, which leaves more RAM for your other mods. |
 | 0.4 | Fixed: trigs really play backwards. 0.2 switched to forward loop, and 0.3's reverse value was ignored by the firmware. |
 | 0.2 | The page, saving and the flashing arrows. |
 

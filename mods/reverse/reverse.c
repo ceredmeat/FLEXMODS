@@ -7,6 +7,7 @@
  * ev_fire_locks). The pattern itself never changes. Saved. The page flashes a track's arrow each time it
  * plays one backwards. */
 #include <stdint.h>
+#include "../common/heapbuf.h"
 #include "digitakt-mk1/core3.h"
 #include "digitakt-mk1/seq.h"
 #include "../common/mpui.h"
@@ -45,11 +46,17 @@ typedef int32_t (*emmc_fn)(int32_t block, int32_t bytes, void *buf);
 #define EMMC_READ  ((emmc_fn)EMMC_READ_AT)
 #define EMMC_WRITE ((emmc_fn)EMMC_WRITE_AT)
 #define MAGIC 0x52455653u                            /* "REVS" */
-static uint8_t block[512] __attribute__((aligned(16)));
+HEAP_BUF(block, 512)          /* borrowed from the heap while loading or saving */
 static int32_t save_wait, loaded, ticks;
 
+/* the settings go with the project (common/projsave.h, through PROJECT LINK): each slot's copy at
+ * PJ_BASE + slot x PJ_NB */
+#define PJ_BASE 0x62300
+#define PJ_NB 1
+#include "../common/projsave.h"
 static void load(void)
 {
+    if (!block_ready()) return;
     uint32_t *w = (uint32_t *)block;
     for (int i = 0; i < 512; i++) block[i] = 0;
     if (EMMC_READ(SAVE_BLOCK, 512, block) != 0 || w[0] != MAGIC || w[1] != (w[2] ^ 0x5a5a5a5au))
@@ -58,12 +65,14 @@ static void load(void)
 }
 static void save(void)
 {
+    if (!block_ready()) return;
     uint32_t *w = (uint32_t *)block, sum = 0;
     for (int i = 0; i < 512; i++) block[i] = 0;
     for (int t = 0; t < 8; t++) { block[12 + t] = (uint8_t)chance[t]; sum = sum * 31u + (uint8_t)chance[t]; }
     w[0] = MAGIC; w[2] = sum; w[1] = sum ^ 0x5a5a5a5au;
     EMMC_WRITE(SAVE_BLOCK, 512, block);
 }
+static void pj_defaults(void) { for (int32_t t = 0; t < 8; t++) chance[t] = 0; }
 
 /* ---- the page ------------------------------------------------------------------------------------------ */
 static int32_t turned[8], hl_k = -1, hl_ticks;
@@ -127,6 +136,7 @@ void rv_tick(void *ctrl)
     int any = 0;
     (void)ctrl;
     if (!loaded && ++ticks > 30) { loaded = 1; load(); }
+    if (loaded) pj_tick();                           /* a project loaded or saved */
     if (save_wait > 0 && --save_wait == 0) save();
     for (int t = 0; t < 8; t++) if (flash[t]) { flash[t]--; any = 1; if (!flash[t]) any = 2; }
     if (hl_ticks > 0 && --hl_ticks == 0) any = 2;

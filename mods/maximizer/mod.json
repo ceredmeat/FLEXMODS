@@ -1,0 +1,64 @@
+{
+ "id": "maximizer",
+ "version": "0.1",
+ "title": "SONIC MAX: an enhancer for the whole mix after the BBE 822A Sonic Maximizer",
+ "category": "Master",
+ "license": "GPL-2.0-or-later",
+ "author": "Cere, made with Claude",
+ "description": "A master page (FUNC + LFO, after DJ FILTER) that runs the whole mix through an enhancer modelled on the BBE 822A Sonic Maximizer, on every output (main, headphones, USB), in stereo. Like the 822A it splits the sound in three (below 150 Hz, the middle, the top), holds the lows and mids back a little so the top arrives first, and turns the top up by how much the music lacks it right now. PRC (PROCESS) and LOW (LO CONTOUR) as on the panel, the BBE IN / OUT switch, output level, where the top band starts (1.2K like the 822A, 2.4K, 4.8K), how much of the phase delay (0-200 %), how fast the process follows, and a soft saturation. The page draws the response live: the top shelf moves as the process works, with the three bands' levels shaded under it. Saved. Not made or endorsed by BBE Sound. Needs DIGIHEALTH (irpina) in the build: its fast audio memory runs the effect's busiest code.",
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "sources": [
+  "maximizer.c"
+ ],
+ "cflags": [
+  "-fno-tree-loop-distribute-patterns",
+  "-DEMMC_READ_AT=0x400e2c14",
+  "-DEMMC_WRITE_AT=0x400e2dfa",
+  "-DSAVE_BLOCK=0x6004f"
+ ],
+ "subscribe": [
+  {
+   "event": "ev_render_master",
+   "fn": "mx_render",
+   "order": 70
+  },
+  {
+   "event": "ev_tick",
+   "fn": "mx_tick",
+   "order": 88
+  }
+ ],
+ "contribute": [
+  {
+   "to": "core_mpages",
+   "order": 61,
+   "data": "00000000",
+   "relocs": [
+    [
+     0,
+     "abs32",
+     "sym:mx_page",
+     0
+    ]
+   ]
+  }
+ ],
+ "requires": [
+  "core",
+  "digihealth"
+ ],
+ "resources": {
+  "names": [
+   "ui:master page SMX",
+   "emmc:0x6004f",
+   "emmc:0x62100-0x6217f"
+  ],
+  "core": "4.2"
+ },
+ "weak": [
+  "proj_gen",
+  "proj_saves",
+  "proj_slot"
+ ]
+}

@@ -24,3 +24,10 @@ The shared seq-events mod lets a mod adjust a trig's velocity right before it pl
 rolls a die for each trig and adds or subtracts up to your amount.
 
 Needs **seq-events** in the same build.
+
+## Changes
+
+| Version | What changed |
+|---|---|
+| 0.3 | The save buffer is borrowed from the Digitakt's spare memory only while loading or saving, which leaves more RAM for your other mods. |
+

@@ -1,4 +1,4 @@
-# MULTITRIG 0.5 (Digitakt MKI, OS 1.54)
+# MULTITRIG 0.6 (Digitakt MKI, OS 1.54)
 
 Edit many trigs' locks at once, in **GRID RECORDING**.
 
@@ -26,3 +26,10 @@ It is saved.
 - Tap TRK rather than hold it: TRK held with a knob is the stock CONTROL ALL.
 
 Needs **core**. Licence: GPL-2.0-or-later. By Cere, made with Claude.
+
+## Changes
+
+| Version | What changed |
+|---|---|
+| 0.6 | The save buffer is borrowed from the Digitakt's spare memory only while loading or saving, which leaves more RAM for your other mods. |
+

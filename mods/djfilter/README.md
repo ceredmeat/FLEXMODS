@@ -3,7 +3,7 @@
 A stereo master filter for the whole mix, after the Electrix FilterFactory: one-knob DJ sweeps,
 resonance, a BUZZ drive, and an LFO or envelope follower that can sync to the tempo.
 
-- **Mod:** `djfilter` 0.7, for Elekloader
+- **Mod:** `djfilter` 0.8, for Elekloader
 - **Digitakt MKI, OS 1.54 only**
 - **Needs in the build:** `core` (4.1 or later) and `seq-events` (new in 0.7, for the tempo sync)
 
@@ -75,6 +75,7 @@ MUTESNAP's YES + trig, still work as before.
 
 | Version | What changed |
 |---|---|
+| 0.8 | Hold FUNC + LFO for half a second to open the master page you used last (DJ FILTER, say) instead of the first one. An idea from pituzinho on Discord. (Not yet confirmed on a unit.) |
 | 0.7 | Tempo sync (YES toggles FREE/SYNC). Now needs `seq-events`. |
 | 0.6 | Smaller page code (the sound is unchanged). The knobs are shared with other mods, for LED COLORS' HEAT. |
 | 0.5 | Dial knobs, a shaded curve, clearer labels, arrow-key page stepping. |

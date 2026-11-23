@@ -21,6 +21,7 @@
  * The held notes are written by the UI or MIDI task into the spare one of two sets and then swapped
  * in with one store, so the sequencer never reads a half-written set. */
 #include <stdint.h>
+#include "../common/heapbuf.h"
 #include "digitakt-mk1/core3.h"
 #include "digitakt-mk1/seq.h"
 
@@ -278,7 +279,7 @@ typedef int32_t (*emmc_fn)(int32_t block, int32_t bytes, void *buf);
 #define EMMC_WRITE ((emmc_fn)EMMC_WRITE_AT)
 #define MAGIC 0x4d415250u                       /* "MARP" */
 struct save { uint32_t magic; uint8_t mode[MT], rate[MT], oct[MT]; uint32_t sum; };
-static uint8_t block[512] __attribute__((aligned(4)));
+HEAP_BUF(block, 512)          /* borrowed from the heap while loading or saving */
 static int32_t loaded, ticks;
 
 static uint32_t sum_of(const struct save *s)
@@ -292,6 +293,7 @@ static uint32_t sum_of(const struct save *s)
 
 static void load(void)
 {
+    if (!block_ready()) return;
     struct save *s = (struct save *)block;
     int32_t i;
     if (EMMC_READ(SAVE_BLOCK, 512, block) != 0 || s->magic != MAGIC || s->sum != sum_of(s))
@@ -305,6 +307,7 @@ static void load(void)
 
 static void save(void)
 {
+    if (!block_ready()) return;
     struct save *s = (struct save *)block;
     int32_t i;
     for (i = 0; i < 512; i++)

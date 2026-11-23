@@ -1,6 +1,6 @@
 {
  "id": "dejavu",
- "version": "0.5",
+ "version": "0.6",
  "title": "Deja Vu: looping RND LFO",
  "category": "Sound",
  "license": "GPL-2.0-or-later",
@@ -17,7 +17,8 @@
   "-DSEED_B_AT=0x4020df20",
   "-DEMMC_READ_AT=0x400e2c14",
   "-DEMMC_WRITE_AT=0x400e2dfa",
-  "-DSAVE_BLOCK=0x60040"
+  "-DSAVE_BLOCK=0x60040",
+  "-Os"
  ],
  "defsym": {
   "STR_CTOR": "0x4017af20"

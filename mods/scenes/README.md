@@ -4,7 +4,7 @@ Two scenes, A and B, with a crossfader between them, after the Octatrack's. A sc
 sound settings on any of the eight audio tracks. Slide from A to B and every setting in the
 scenes morphs at once.
 
-- **Mod:** `scenes` 0.1, for Elekloader
+- **Mod:** `scenes` 0.3, for Elekloader
 - **Digitakt MKI, OS 1.54 only**
 - **Needs in the build:** `core` (4.1 or later)
 
@@ -31,8 +31,26 @@ scenes morphs at once.
 | **YES** | Jumps the fader to the other end. |
 | **LEFT / RIGHT** | Record scene A / B. |
 | **FUNC + LEFT / RIGHT** | Clear scene A / B. |
+| **DOWN** | Open **SCENE INFO** (below). |
 | **NO** | Close the page. |
+| **A page key** (TRIG, SRC, FLTR, AMP, LFO, and GLOBAL / SAMPLE) | Close the page and go straight to that page. |
 | **TRK + FUNC** | Open or close the page, or end recording. |
+
+---
+
+## SCENE INFO
+
+Press **DOWN** on the SCENES page to see what the scenes hold: one row per value, such as
+`T1 FLT FRQ  40  96`, which is track 1's filter frequency, with its value in scene A and in scene B
+(a dash where a scene doesn't have it).
+
+| Key | What it does |
+|---|---|
+| **UP / DOWN** | Choose a row. |
+| **FUNC + LEFT** | Take that value out of scene A. |
+| **FUNC + RIGHT** | Take it out of scene B. |
+| **FUNC + YES** | Take it out of both. |
+| **NO** | Back to the SCENES page. |
 
 ---
 
@@ -50,8 +68,20 @@ scenes morphs at once.
 
 - **Saved:** both scenes are saved and come back at power-on (internal storage, eMMC block
   `0x60047`, which the stock firmware doesn't use). The fader starts at A.
+- **With PROJECT LINK in the build,** the scenes go with the project: saved when you save the
+  project, back when you load it, and empty for a new project. Without it, they stay the same
+  whichever project you load.
 - **TRK + FUNC** is SCENES' shortcut. On a stock Digitakt that combination is quick mute, so with
   SCENES in your build, use the global mute mode instead.
+
+---
+
+## Changes
+
+| Version | What changed |
+|---|---|
+| 0.3 | SCENE INFO (DOWN): see every value in the scenes and take single values out. Page keys close the page and go straight to that page. The scenes go with the project when PROJECT LINK is in the build. |
+| 0.1 | First release. |
 
 ---
 

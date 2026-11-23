@@ -1,6 +1,6 @@
 {
  "id": "freqseq",
- "version": "0.5",
+ "version": "0.6",
  "title": "FREQSEQ: a generative sequencer on every track",
  "category": "Sequencer",
  "license": "GPL-3.0-or-later",
@@ -79,11 +79,17 @@
   "core": "4.2",
   "names": [
    "emmc:0x60046",
-   "emmc:0x60049"
+   "emmc:0x60049",
+   "emmc:0x62000-0x620ff"
   ]
  },
  "requires": [
   "core",
   "seq-events"
+ ],
+ "weak": [
+  "proj_gen",
+  "proj_saves",
+  "proj_slot"
  ]
 }

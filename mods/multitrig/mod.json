@@ -1,6 +1,6 @@
 {
  "id": "multitrig",
- "version": "0.5",
+ "version": "0.6",
  "title": "MULTITRIG: page and track-wide lock editing",
  "category": "Sequencer",
  "license": "GPL-2.0-or-later",
@@ -15,7 +15,8 @@
  "cflags": [
   "-DEMMC_READ_AT=0x400e2c14",
   "-DEMMC_WRITE_AT=0x400e2dfa",
-  "-DSAVE_BLOCK=0x60045"
+  "-DSAVE_BLOCK=0x60045",
+  "-Os"
  ],
  "defsym": {
   "STR_CTOR": "0x4017af20"

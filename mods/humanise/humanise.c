@@ -9,6 +9,7 @@
  * How it works: seq-events' ev_fire_vel, the velocity a note trig is about to play with. Nothing in
  * the pattern changes: take the mod out and every trig plays as you programmed it. */
 #include <stdint.h>
+#include "../common/heapbuf.h"
 #include "digitakt-mk1/core3.h"
 #include "digitakt-mk1/seq.h"
 
@@ -44,7 +45,7 @@ void hum_vel(int32_t track, int32_t step, int32_t *vel)
 /* ---- saving ---------------------------------------------------------------------------------------- */
 #define SAVE_MAGIC 0x48554d4eu                  /* "HUMN" */
 struct save { uint32_t magic; uint8_t version, amt[ROWS]; uint8_t pad[2]; uint32_t sum; };
-static uint8_t block[512] __attribute__((aligned(16)));
+HEAP_BUF(block, 512)          /* borrowed from the heap while loading or saving */
 
 static uint32_t checksum(const uint8_t *p, int32_t n)
 {
@@ -57,6 +58,7 @@ static uint32_t checksum(const uint8_t *p, int32_t n)
 
 static void load(void)
 {
+    if (!block_ready()) return;
     struct save *s = (struct save *)block;
     int32_t i;
     for (i = 0; i < 512; i++) block[i] = 0;
@@ -71,6 +73,7 @@ static void load(void)
 
 static void save(void)
 {
+    if (!block_ready()) return;
     struct save *s = (struct save *)block;
     int32_t i;
     for (i = 0; i < 512; i++) block[i] = 0;

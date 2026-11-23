@@ -1,0 +1,63 @@
+{
+ "id": "glue",
+ "version": "0.1",
+ "title": "GLUE: a bus compressor for the whole mix after the SSL G-series centre-section compressor",
+ "category": "Master",
+ "license": "GPL-2.0-or-later",
+ "author": "Cere, made with Claude",
+ "description": "A master page (FUNC + LFO) that runs the whole mix through a stereo-linked bus compressor modelled on the SSL G-series console's centre-section compressor, on every output (main, headphones, USB). THR -40 to 0 dB; RAT 2, 4 or 10; ATK .1 .3 1 3 10 30 ms and REL .1 .3 .6 1.2 s or AUTO, as on the G; make-up gain to +15 dB; MIX for parallel compression; SCF, a high pass on what it listens to (OFF, 60, 90, 150 Hz) so the kick doesn't pump the mix; and the IN / OUT switch. The page has a moving-needle gain reduction meter like the G's and the compression curve with a dot where the mix is right now. Saved. Not made or endorsed by Solid State Logic.",
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "sources": [
+  "glue.c"
+ ],
+ "cflags": [
+  "-fno-tree-loop-distribute-patterns",
+  "-DEMMC_READ_AT=0x400e2c14",
+  "-DEMMC_WRITE_AT=0x400e2dfa",
+  "-DSAVE_BLOCK=0x60050"
+ ],
+ "subscribe": [
+  {
+   "event": "ev_render_master",
+   "fn": "gl_render",
+   "order": 75
+  },
+  {
+   "event": "ev_tick",
+   "fn": "gl_tick",
+   "order": 89
+  }
+ ],
+ "contribute": [
+  {
+   "to": "core_mpages",
+   "order": 63,
+   "data": "00000000",
+   "relocs": [
+    [
+     0,
+     "abs32",
+     "sym:gl_page",
+     0
+    ]
+   ]
+  }
+ ],
+ "requires": [
+  "core"
+ ],
+ "resources": {
+  "names": [
+   "ui:master page GLU",
+   "emmc:0x60050",
+   "emmc:0x62200-0x6227f"
+  ],
+  "core": "4.2"
+ },
+ "weak": [
+  "proj_gen",
+  "proj_saves",
+  "proj_slot"
+ ]
+}

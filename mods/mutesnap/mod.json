@@ -1,6 +1,6 @@
 {
  "id": "mutesnap",
- "version": "0.1",
+ "version": "0.2",
  "title": "Mute Snapshots",
  "category": "Performance",
  "license": "GPL-2.0-or-later",
@@ -8,21 +8,46 @@
  "description": "Four mute snapshots, after the Octatrack's mute scenes. Hold YES and press trig 1-4 to save the 16 tracks' mutes as snapshot 1-4; hold NO and press trig 1-4 to recall it at the end of the bar (at once when stopped). The same keys again before the bar cancel it. M1-M4 shows top-right while a recall waits. Snapshots are kept on the unit. Needs seq-events.",
  "device": "digitakt-mk1",
  "os": "1.54",
- "sources": ["mutesnap.c"],
+ "sources": [
+  "mutesnap.c"
+ ],
  "cflags": [
   "-DEMMC_READ_AT=0x400e2c14",
   "-DEMMC_WRITE_AT=0x400e2dfa",
-  "-DSAVE_BLOCK=0x60043"
+  "-DSAVE_BLOCK=0x60043",
+  "-Os"
  ],
  "subscribe": [
-  {"event": "ev_fire_step", "fn": "msn_step", "order": 90},
-  {"event": "ev_key", "fn": "msn_key", "order": 25},
-  {"event": "ev_tick", "fn": "msn_tick", "order": 62},
-  {"event": "ev_draw", "fn": "msn_draw", "order": 73}
+  {
+   "event": "ev_fire_step",
+   "fn": "msn_step",
+   "order": 90
+  },
+  {
+   "event": "ev_key",
+   "fn": "msn_key",
+   "order": 25
+  },
+  {
+   "event": "ev_tick",
+   "fn": "msn_tick",
+   "order": 62
+  },
+  {
+   "event": "ev_draw",
+   "fn": "msn_draw",
+   "order": 73
+  }
  ],
  "resources": {
   "core": "4.1",
-  "names": ["key:YES+TRIG", "key:NO+TRIG"]
+  "names": [
+   "key:YES+TRIG",
+   "key:NO+TRIG"
+  ]
  },
- "requires": ["core", "seq-events"]
+ "requires": [
+  "core",
+  "seq-events"
+ ]
 }

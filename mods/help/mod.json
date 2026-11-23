@@ -1,0 +1,87 @@
+{
+ "id": "help",
+ "version": "0.1",
+ "title": "HELP: a mini manual for the mods in this build, on a master page",
+ "category": "System",
+ "license": "GPL-2.0-or-later",
+ "author": "Cere, made with Claude",
+ "description": "A master page (FUNC + LFO, HLP) listing the mods in this build, each with a short card of its keys and knobs. It looks for each mod's code, so only the mods you built in show. UP / DOWN or any knob choose and scroll, YES or a trig key opens a card, NO goes back to the list.",
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "sources": [
+  "help.c"
+ ],
+ "cflags": [
+  "-fno-tree-loop-distribute-patterns"
+ ],
+ "weak": [
+  "acc_vel",
+  "ctrlall_key",
+  "dash_tick",
+  "dc_tick",
+  "df_render",
+  "dn_gen_trig",
+  "dr_render",
+  "fl_gen_trig",
+  "fxl_tick",
+  "ge_render",
+  "gl_render",
+  "gm_tick",
+  "hum_vel",
+  "kitab_key",
+  "ledc_key",
+  "lfo_wave_fmt",
+  "ma_gen_trig",
+  "ms_settings",
+  "msn_key",
+  "mt_key",
+  "mx_render",
+  "pl_new_s",
+  "pl_tick",
+  "ru_val_text_s",
+  "rv_tick",
+  "sc_key",
+  "solo_key",
+  "ss_gen_trig",
+  "tm_key",
+  "ut_render",
+  "vs_tick",
+  "zb_render"
+ ],
+ "contribute": [
+  {
+   "to": "core_mpages",
+   "order": 99,
+   "data": "00000000",
+   "relocs": [
+    [
+     0,
+     "abs32",
+     "sym:hp_page",
+     0
+    ]
+   ]
+  }
+ ],
+ "requires": [
+  "core"
+ ],
+ "resources": {
+  "names": [
+   "ui:master page HLP"
+  ],
+  "core": "4.2"
+ },
+ "subscribe": [
+  {
+   "event": "ev_key",
+   "fn": "hp_ev_key",
+   "order": 2
+  },
+  {
+   "event": "ev_tick",
+   "fn": "hp_tick",
+   "order": 91
+  }
+ ]
+}

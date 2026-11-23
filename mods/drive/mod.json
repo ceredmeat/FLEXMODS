@@ -1,6 +1,6 @@
 {
  "id": "drive",
- "version": "0.5",
+ "version": "0.6",
  "title": "DRIVE: a saturation and a low pass gate on each track",
  "category": "Effects",
  "description": "A master page (FUNC + LFO) that gives the active audio track a drive of its own before its filter: TAPE, TUBE, FUZZ or FOLD, with amount, tone, mix and level; and (0.5) a low pass gate after it, after VILNIS's: LP, VCA or both, struck by every hit on the track, with decay and resonance. The page draws the curve and lists the eight tracks' drives. Saved.",
@@ -45,12 +45,18 @@
  "resources": {
   "names": [
    "ui:master page DRV",
-   "emmc:0x6004a"
+   "emmc:0x6004a",
+   "emmc:0x62280-0x622ff"
   ],
   "core": "4.1"
  },
  "device": "digitakt-mk1",
  "os": "1.54",
  "license": "GPL-2.0-or-later",
- "author": "Cere, made with Claude"
+ "author": "Cere, made with Claude",
+ "weak": [
+  "proj_gen",
+  "proj_saves",
+  "proj_slot"
+ ]
 }

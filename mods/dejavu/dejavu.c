@@ -23,6 +23,7 @@
  *     call comes from a trig (the audio engine keeps that at 52(sp), the MIDI engine in d5).
  *   - with RND LOOP off we do exactly what the stock routine does. */
 #include <stdint.h>
+#include "../common/heapbuf.h"
 #include "digitakt-mk1/core3.h"
 
 typedef int32_t (*emmc_fn)(int32_t block, int32_t bytes, void *buf);   /* 0 on success */
@@ -249,7 +250,7 @@ void dv_settings(void *menu)
 /* ---- saving (the same way ledcolors saves) --------------------------------------------------------- */
 #define SAVE_MAGIC 0x444a5655u          /* "DJVU" */
 struct save { uint32_t magic; uint8_t version, len_i, lock_pct, restart; uint32_t sum; };
-static uint8_t block[512] __attribute__((aligned(16)));
+HEAP_BUF(block, 512)          /* borrowed from the heap while loading or saving */
 static int32_t loaded, ticks;
 
 static uint32_t checksum(const uint8_t *p, int32_t n)
@@ -263,6 +264,7 @@ static uint32_t checksum(const uint8_t *p, int32_t n)
 
 static void load(void)
 {
+    if (!block_ready()) return;
     struct save *s = (struct save *)block;
     int32_t i;
     for (i = 0; i < 512; i++) block[i] = 0;
@@ -278,6 +280,7 @@ static void load(void)
 
 static void save(void)
 {
+    if (!block_ready()) return;
     struct save *s = (struct save *)block;
     int32_t i;
     for (i = 0; i < 512; i++) block[i] = 0;

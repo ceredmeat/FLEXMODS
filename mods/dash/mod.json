@@ -1,0 +1,49 @@
+{
+ "id": "dash",
+ "version": "0.2",
+ "title": "DASH: several pages of a track's sound on one screen",
+ "category": "Looks",
+ "license": "GPL-2.0-or-later",
+ "author": "Cere, made with Claude",
+ "description": "One master page (DSH) showing the active audio track's SRC knobs, its LFO and its filter and amp values together, as bars, with the last value that moved named along the bottom (a slot finder). Made to be read at a glance, on the unit or in a screen dump (DigiWall, Elek View). Reads only; changes nothing.",
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "sources": [
+  "dash.c"
+ ],
+ "cflags": [
+  "-Os",
+  "-fno-tree-loop-distribute-patterns"
+ ],
+ "subscribe": [
+  {
+   "event": "ev_tick",
+   "fn": "dash_tick",
+   "order": 94
+  }
+ ],
+ "contribute": [
+  {
+   "to": "core_mpages",
+   "order": 95,
+   "data": "00000000",
+   "relocs": [
+    [
+     0,
+     "abs32",
+     "sym:dash_page",
+     0
+    ]
+   ]
+  }
+ ],
+ "requires": [
+  "core"
+ ],
+ "resources": {
+  "names": [
+   "ui:master page DSH"
+  ],
+  "core": "4.2"
+ }
+}

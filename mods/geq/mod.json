@@ -1,0 +1,64 @@
+{
+ "id": "geq",
+ "version": "0.1",
+ "title": "G-EQ: a four-band EQ for the whole mix after the SSL G-series channel EQ",
+ "category": "Master",
+ "license": "GPL-2.0-or-later",
+ "author": "Cere, made with Claude",
+ "description": "A master page (FUNC + LFO) with a four-band EQ for the whole mix modelled on the SSL G-series channel EQ, on every output (main, headphones, USB), in stereo. LF 30-450 Hz, LMF 200 Hz - 2.5 kHz, HMF 600 Hz - 7 kHz, HF 1.5 - 16 kHz, each -15 to +15 dB: the knobs are gain and frequency in pairs. Push a knob for the extras, as the G's buttons: the LF and HF frequency knobs switch bell or shelf, the mids' set their width (Q .7, 1.5, 3), LF gain the high pass (OFF, 30, 60, 120, 240 Hz), HMF gain the EQ IN / OUT. The bells are proportional Q as on the G. The page draws the EQ curve with each band's number at its handle, and the band you touch in words. Saved. Not made or endorsed by Solid State Logic. Needs DIGIHEALTH (irpina) in the build: its fast audio memory runs the effect's busiest code.",
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "sources": [
+  "geq.c"
+ ],
+ "cflags": [
+  "-fno-tree-loop-distribute-patterns",
+  "-DEMMC_READ_AT=0x400e2c14",
+  "-DEMMC_WRITE_AT=0x400e2dfa",
+  "-DSAVE_BLOCK=0x60051"
+ ],
+ "subscribe": [
+  {
+   "event": "ev_render_master",
+   "fn": "ge_render",
+   "order": 62
+  },
+  {
+   "event": "ev_tick",
+   "fn": "ge_tick",
+   "order": 90
+  }
+ ],
+ "contribute": [
+  {
+   "to": "core_mpages",
+   "order": 62,
+   "data": "00000000",
+   "relocs": [
+    [
+     0,
+     "abs32",
+     "sym:ge_page",
+     0
+    ]
+   ]
+  }
+ ],
+ "requires": [
+  "core",
+  "digihealth"
+ ],
+ "resources": {
+  "names": [
+   "ui:master page GEQ",
+   "emmc:0x60051",
+   "emmc:0x62180-0x621ff"
+  ],
+  "core": "4.2"
+ },
+ "weak": [
+  "proj_gen",
+  "proj_saves",
+  "proj_slot"
+ ]
+}

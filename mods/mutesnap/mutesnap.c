@@ -20,6 +20,7 @@
  *     every 33 ms, quicker than a 16th at any tempo the Digitakt plays) sets the mutes, before the
  *     next bar's first step. */
 #include <stdint.h>
+#include "../common/heapbuf.h"
 #include "digitakt-mk1/core3.h"
 
 typedef uint32_t (*fn0)(void);
@@ -146,7 +147,7 @@ int32_t msn_key(void *brain, void *ev)
 /* ---- saving ------------------------------------------------------------------------------------------ */
 #define MAGIC 0x4d534e50u                       /* "MSNP" */
 struct save { uint32_t magic; uint16_t snap[SLOTS]; uint8_t used[SLOTS]; uint32_t sum; };
-static uint8_t block[512] __attribute__((aligned(4)));
+HEAP_BUF(block, 512)          /* borrowed from the heap while loading or saving */
 static int32_t loaded, ticks;
 
 static uint32_t sum_of(const struct save *s)
@@ -160,6 +161,7 @@ static uint32_t sum_of(const struct save *s)
 
 static void load(void)
 {
+    if (!block_ready()) return;
     struct save *s = (struct save *)block;
     int32_t i;
     if (EMMC_READ(SAVE_BLOCK, 512, block) != 0 || s->magic != MAGIC || s->sum != sum_of(s))
@@ -172,6 +174,7 @@ static void load(void)
 
 static void save(void)
 {
+    if (!block_ready()) return;
     struct save *s = (struct save *)block;
     int32_t i;
     for (i = 0; i < 512; i++)

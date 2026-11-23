@@ -422,6 +422,7 @@ static void df_clear(void *view)
 #define K_LEFT  16
 #define K_RIGHT 17
 static uint32_t ticks, drawn_at;
+static int32_t func_dn, lfo_at = -1, last_pg = -1, seen_pg = -1;
 static void mp_step(void *view, int32_t dir)
 {
     uint8_t *v = (uint8_t *)view;
@@ -429,7 +430,25 @@ static void mp_step(void *view, int32_t dir)
     int32_t cur = *(int32_t *)(v + 144);
     if (n < 2 || cur < 0) return;
     *(int32_t *)(v + 144) = (cur + dir + n) % n;
-    fw_invalidate(view);
+#if defined(__m68k__) || defined(__mcoldfire__)
+    /* then what the stock FUNC+LFO step does after it (OS 1.54, 0x4003376c-0x400337b8): draw again, reset
+     * the view's state at +148, build the title (vtable slot 19, which core names mod pages through; the
+     * std::string comes back where a0 points), show it in the stock title pop-up (0x40093a56 on the
+     * view's +108), free the string, then the view's slot 20 */
+    ((void (*)(void *))0x400c9a3a)(view);
+    ((void (*)(void *))0x400c050c)(v + 148);
+    volatile uint32_t str[4];
+    str[0] = 0; str[1] = 0; str[2] = 0; str[3] = 0;
+    void **vt = *(void ***)v;
+    register void *a0 __asm__("a0") = (void *)str;
+    __asm__ volatile("move.l %1,-(%%sp)\n\tjsr (%2)\n\taddq.l #4,%%sp"
+                     : "+a"(a0) : "r"(view), "a"(vt[19]) : "d0", "d1", "a1", "memory", "cc");
+    ((void (*)(void *, void *))0x40093a56)(*(void **)(v + 108), (void *)str);
+    ((void (*)(void *))0x40179470)((void *)str);
+    ((void (*)(void *))vt[20])(view);
+#else
+    fw_invalidate(view);                          /* the preview harness on a PC */
+#endif
 }
 static int32_t df_key(void *view, void *event)
 {
@@ -456,6 +475,24 @@ int32_t df_any_key(void *brain, void *ev)
     int32_t key = *(int32_t *)((uint8_t *)ev + 12), fl = *(int32_t *)((uint8_t *)ev + 16);
     static int32_t trk_down;
     (void)brain;
+    /* 0.8: a long FUNC + LFO (held half a second) opens the master page you used last, not the first */
+    if (key == 1) func_dn = (fl & 1) && !(fl & 0x10);
+    if (key == 23) {
+        if ((fl & 1) && !(fl & 0x18) && (func_dn || (fl & 2))) lfo_at = (int32_t)ticks;
+        else if ((fl & 0x10) && lfo_at >= 0) {
+            int32_t held = (int32_t)ticks - lfo_at;
+            lfo_at = -1;
+            if (held >= 15 && last_pg >= 0 && core_mview) {
+                uint8_t *v = (uint8_t *)core_mview;
+                int32_t n = (int32_t)((*(uint32_t *)(v + 128) - *(uint32_t *)(v + 124)) >> 2);
+                if (n > 1 && last_pg < n) {
+                    *(int32_t *)(v + 144) = last_pg;
+                    mp_step(core_mview, 0);         /* shown as the stock step shows a page: its banner too */
+                    return 1;                       /* the release is ours: the stock would step on from it */
+                }
+            }
+        }
+    }
     if (key == 2) trk_down = (fl & 1) && !(fl & 0x10);       /* TRK: TRK + LEFT / RIGHT is LED colours' */
     if ((key != K_LEFT && key != K_RIGHT) || trk_down || !core_mview || ticks - drawn_at > 25)
         return 0;
@@ -472,6 +509,17 @@ void df_tick(void *ctrl)
     static uint32_t draws;
     (void)ctrl;
     ticks++;
+    if (core_mview) {                                       /* 0.8: the master page in use, for a long FUNC + LFO */
+        uint8_t *v = (uint8_t *)core_mview;
+        int32_t cur = *(int32_t *)(v + 144), n = (int32_t)((*(uint32_t *)(v + 128) - *(uint32_t *)(v + 124)) >> 2);
+        if (cur != seen_pg) {
+            /* back to the first page from one that isn't next to it, or after a while unseen: the view was
+             * opened again (it starts on the first), not stepped there; keep the page before */
+            int32_t opened = cur == 0 && seen_pg > 0 && ((seen_pg != 1 && seen_pg != n - 1) || ticks - drawn_at > 60);
+            if (!opened) last_pg = cur;
+            seen_pg = cur;
+        }
+    }
     if (hl_ticks > 0 && --hl_ticks == 0 && core_mview)
         fw_invalidate(core_mview);                          /* the lit knob goes dark again */
     if (core_mview && core_mview_draws != draws) {          /* the master view is on the screen */

@@ -4,7 +4,7 @@ A generative sequencer on every track. Each of the 16 tracks (8 audio, 8 MIDI) c
 sequencers, from a Turing Machine to Mutable Instruments' Grids, each with its own settings. Your
 pattern itself never changes: FREQSEQ changes what plays.
 
-- **Mod:** `freqseq` 0.5, for Elekloader
+- **Mod:** `freqseq` 0.6, for Elekloader
 - **Digitakt MKI, OS 1.54 only**
 - **Needs in the build:** `core` (4.1 or later) and `seq-events`
 - **Licence:** GPL-3.0-or-later (see below)
@@ -72,6 +72,7 @@ Shared by all the sequencers:
 
 | Version | What changed |
 |---|---|
+| 0.6 | With PROJECT LINK in the build, the settings go with the project: saved when you save it, back when you load it, defaults for a new project (not yet confirmed on a unit). Page keys (TRIG, SRC, FLTR, AMP, LFO, GLOBAL, SAMPLE) close the FREQSEQ screen and go straight to that page. The save buffer is borrowed from the Digitakt's spare memory only while loading or saving, which leaves more RAM for your other mods. |
 | 0.5 | Fixed: ROULETTE and SCATTER hits that landed on sample 0 or start 0, and wobbles to 0, are no longer skipped. |
 | Earlier | A sequencer on every track at once, seven more sequencers (CANON to BERNOULLI), clearer screens. |
 

@@ -1,4 +1,4 @@
-# Deja Vu 0.5: looping RND LFO (Digitakt MKI, OS 1.54)
+# Deja Vu 0.6: looping RND LFO (Digitakt MKI, OS 1.54)
 
 The LFO's **RND** wave normally picks new random values forever. With Deja Vu it plays a **loop** of
 random values that you can freeze or let slowly drift, like the Octatrack's Deja Vu mod (or a Turing
@@ -69,6 +69,12 @@ stock routine does, instruction for instruction.
 
 This code runs inside the sound engine, many times a second, so it's kept very short and never
 calls anything else in the firmware.
+
+## Changes
+
+| Version | What changed |
+|---|---|
+| 0.6 | The save buffer is borrowed from the Digitakt's spare memory only while loading or saving, which leaves more RAM for your other mods. |
 
 ## Mixing with other mods
 

@@ -79,7 +79,25 @@ static void mp_step(void *view, int32_t dir)
     int32_t cur = *(int32_t *)(v + 144);
     if (n < 2 || cur < 0) return;
     *(int32_t *)(v + 144) = (cur + dir + n) % n;
-    fw_invalidate(view);
+#if defined(__m68k__) || defined(__mcoldfire__)
+    /* then what the stock FUNC+LFO step does after it (OS 1.54, 0x4003376c-0x400337b8): draw again, reset
+     * the view's state at +148, build the title (vtable slot 19, which core names mod pages through; the
+     * std::string comes back where a0 points), show it in the stock title pop-up (0x40093a56 on the
+     * view's +108), free the string, then the view's slot 20 */
+    ((void (*)(void *))0x400c9a3a)(view);
+    ((void (*)(void *))0x400c050c)(v + 148);
+    volatile uint32_t str[4];
+    str[0] = 0; str[1] = 0; str[2] = 0; str[3] = 0;
+    void **vt = *(void ***)v;
+    register void *a0 __asm__("a0") = (void *)str;
+    __asm__ volatile("move.l %1,-(%%sp)\n\tjsr (%2)\n\taddq.l #4,%%sp"
+                     : "+a"(a0) : "r"(view), "a"(vt[19]) : "d0", "d1", "a1", "memory", "cc");
+    ((void (*)(void *, void *))0x40093a56)(*(void **)(v + 108), (void *)str);
+    ((void (*)(void *))0x40179470)((void *)str);
+    ((void (*)(void *))vt[20])(view);
+#else
+    fw_invalidate(view);                          /* the preview harness on a PC */
+#endif
 }
 /* a page's key handler: LEFT / RIGHT (pressed, no FUNC) step the pages; the rest left to the stock */
 static int32_t mp_key(void *view, void *event)

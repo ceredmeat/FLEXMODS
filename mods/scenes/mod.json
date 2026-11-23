@@ -1,11 +1,11 @@
 {
  "id": "scenes",
- "version": "0.1",
+ "version": "0.3",
  "title": "SCENES: Octatrack-style crossfader",
  "category": "Performance",
  "license": "GPL-2.0-or-later",
  "author": "Cere, made with Claude",
- "description": "Two scenes, A and B, and a crossfader between them, after the Octatrack. TRK + FUNC opens the SCENES page. LEFT (or RIGHT) records scene A (or B): turn knobs on any audio track, then TRK + FUNC again; the sounds go back to how they were and the turned values are the scene. On the page every knob moves the crossfader, YES jumps to the other end, FUNC + LEFT/RIGHT clears a scene, NO closes. Scenes are saved; the fader starts at A.",
+ "description": "Two scenes, A and B, and a crossfader between them, after the Octatrack. TRK + FUNC opens the SCENES page. LEFT (or RIGHT) records scene A (or B): turn knobs on any audio track, then TRK + FUNC again; the sounds go back to how they were and the turned values are the scene. On the page every knob moves the crossfader, YES jumps to the other end, FUNC + LEFT/RIGHT clears a scene, NO closes. Scenes are saved; the fader starts at A. 0.3: DOWN on the page shows SCENE INFO, every value in the scenes with its A and B, and FUNC + LEFT / RIGHT / YES take one out of A, B or both; page keys close the page and go straight there; and the scenes go with the project when PROJECT LINK is in the build.",
  "device": "digitakt-mk1",
  "os": "1.54",
  "sources": [
@@ -47,10 +47,16 @@
  "resources": {
   "core": "4.1",
   "names": [
-   "emmc:0x60047"
+   "emmc:0x60047",
+   "emmc:0x62400-0x6247f"
   ]
  },
  "requires": [
   "core"
+ ],
+ "weak": [
+  "proj_gen",
+  "proj_saves",
+  "proj_slot"
  ]
 }

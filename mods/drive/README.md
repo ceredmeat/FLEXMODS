@@ -4,7 +4,7 @@ A saturation of its own on each audio track, before the track's filter: tape war
 fuzz or a wavefolder. New in 0.5: a **low pass gate** after it, the Buchla-style gate from VILNIS, on
 any track.
 
-- **Mod:** `drive` 0.5, for Elekloader
+- **Mod:** `drive` 0.6, for Elekloader
 - **Digitakt MKI, OS 1.54 only**
 - **Needs in the build:** `core` (4.1 or later)
 
@@ -76,6 +76,7 @@ closing with a soft, organic decay, like the vactrol in a Buchla.
 
 | Version | What changed |
 |---|---|
+| 0.6 | With PROJECT LINK in the build, the settings go with the project: saved when you save it, back when you load it, defaults for a new project (not yet confirmed on a unit). The save buffer is borrowed from the Digitakt's spare memory only while loading or saving, which leaves more RAM for your other mods. |
 | 0.5 | The low pass gate (F–H). |
 | 0.4 | Smaller page code; the sound is unchanged. |
 

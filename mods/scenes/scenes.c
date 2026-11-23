@@ -12,7 +12,12 @@
  *                       knob you turn on any track goes into the scene instead of the sound. TRK + FUNC
  *                       ends it: the sounds go back to how they were and the page shows again.
  *     FUNC + LEFT/RIGHT clears scene A / B
+ *     DOWN              0.3: the SCENE INFO page: every value in the scenes, a row each (the track, the
+ *                       parameter, its value in A and in B, -- where a scene doesn't change it).
+ *                       UP / DOWN choose a row; FUNC + LEFT / RIGHT take it out of scene A / B; FUNC + YES
+ *                       out of both; NO back to the fader. The knobs still move the fader.
  *     NO                closes the page
+ *     a page key        0.3: (TRIG SRC FLTR AMP LFO, GLOBAL, SAMPLE) closes it and goes there
  *
  * How it works:
  *   - recording: the sounds of the eight tracks (the UI kit, fw_kit) are copied when it starts, with
@@ -22,8 +27,11 @@
  *     the engine's copy of the sound (0x800014f0 + 2 (53 t + 9 + slot), through fw_set_param, as a knob
  *     does). The track's own value is what the engine's copy holds when it is not what we last wrote:
  *     a trig, a lock or a knob put it there.
- *   - the scenes are saved (SAVE_BLOCK) and come back at power-on; the fader starts at A. */
+ *   - the scenes are saved (SAVE_BLOCK) and come back at power-on; the fader starts at A.
+ *   - 0.3: and they go with the project, through PROJECT LINK (common/projsave.h): kept with it when
+ *     you SAVE PROJECT, back when you load it, none in a new project. */
 #include <stdint.h>
+#include "../common/heapbuf.h"
 #include "digitakt-mk1/core3.h"
 
 #define P88(t, k)  (*(volatile int16_t *)(0x800014f0u + 2u * (53u * (uint32_t)(t) + 9u + (uint32_t)(k))))
@@ -108,7 +116,7 @@ typedef int32_t (*emmc_fn)(int32_t block, int32_t bytes, void *buf);
 #define EMMC_WRITE ((emmc_fn)EMMC_WRITE_AT)
 #define SAVE_MAGIC 0x53434e53u                          /* "SCNS" */
 struct save { uint32_t magic; uint8_t version, n; uint8_t pad[2]; struct ent e[MAXE]; uint32_t sum; };
-static uint8_t block[512] __attribute__((aligned(16)));
+HEAP_BUF(block, 512)          /* borrowed from the heap while loading or saving */
 static int32_t save_wait, loaded, ticks;
 
 static uint32_t checksum(const uint8_t *p, int32_t n)
@@ -119,8 +127,13 @@ static uint32_t checksum(const uint8_t *p, int32_t n)
     return s;
 }
 
+/* the scenes go with the project (common/projsave.h, through PROJECT LINK): each slot's at 0x62400 + slot */
+#define PJ_BASE 0x62400
+#define PJ_NB 1
+#include "../common/projsave.h"
 static void load(void)
 {
+    if (!block_ready()) return;
     struct save *s = (struct save *)block;
     int32_t n = 0;
     for (int32_t i = 0; i < 512; i++) block[i] = 0;
@@ -141,6 +154,7 @@ static void load(void)
 
 static void save(void)
 {
+    if (!block_ready()) return;
     struct save *s = (struct save *)block;
     for (int32_t i = 0; i < 512; i++) block[i] = 0;
     s->magic = SAVE_MAGIC;
@@ -151,6 +165,7 @@ static void save(void)
     s->sum = checksum(block, (int32_t)((uint8_t *)&s->sum - block));
     EMMC_WRITE(SAVE_BLOCK, 512, block);
 }
+static void pj_defaults(void) { busy = 1; unapply(); nent = 0; busy = 0; }
 
 /* ---- recording ----------------------------------------------------------------------------------------- */
 static int16_t snap[8][SLOTS];
@@ -232,6 +247,8 @@ static void clear_scene(int32_t s)
 #define K_TRK   2
 #define K_YES   12
 #define K_NO    13
+#define K_UP    14
+#define K_DOWN  15
 #define K_LEFT  16
 #define K_RIGHT 17
 #define F_DOWN    0x01
@@ -240,6 +257,21 @@ static void clear_scene(int32_t s)
 #define F_RELEASE 0x10
 
 static int32_t ui_open, trk_down, swallow_func, swallow_no;
+static int32_t info, sel;                               /* 0.3: the info page, and its chosen row */
+
+/* 0.3: take one value out of a scene (s 0 A, 1 B; 2 both), as FUNC + LEFT / RIGHT clears a whole scene */
+static void clear_one(int32_t i, int32_t s)
+{
+    if (i < 0 || i >= nent) return;
+    busy = 1;
+    unapply();
+    if (s != 1) ents[i].v[0] = NONE;
+    if (s != 0) ents[i].v[1] = NONE;
+    compact();
+    busy = 0;
+    if (sel >= nent) sel = nent > 0 ? nent - 1 : 0;
+    save_wait = 60;
+}
 
 int32_t sc_key(void *brain, void *ev)
 {
@@ -259,15 +291,38 @@ int32_t sc_key(void *brain, void *ev)
             ui_open = 1;
         } else
             ui_open = !ui_open;
+        info = 0;
         return 1;
     }
     if (!ui_open)
         return 0;
+    if ((key >= 19 && key <= 23) || key == 6 || key == 7) {   /* a page key (TRIG SRC FLTR AMP LFO, GLOBAL, SAMPLE): */
+        if (press) { ui_open = 0; info = 0; }         /* close, and let the Digitakt go straight there */
+        return 0;
+    }
     if (key == K_NO && swallow_no) {
         if (!down) swallow_no = 0;
         return 1;
     }
+    if (info) {                                         /* 0.3: the info page */
+        if (!press && key != K_UP && key != K_DOWN) return 1;
+        if ((key == K_UP || key == K_DOWN) && down) {
+            if (key == K_UP && sel > 0) sel--;
+            if (key == K_DOWN && sel < nent - 1) sel++;
+            return 1;
+        }
+        if (key == K_NO) { info = 0; swallow_no = 1; return 1; }
+        if (fl & F_FUNC) {
+            if (key == K_LEFT) clear_one(sel, 0);
+            else if (key == K_RIGHT) clear_one(sel, 1);
+            else if (key == K_YES) clear_one(sel, 2);
+        }
+        return 1;
+    }
     switch (key) {
+    case K_DOWN:
+        if (press) { info = 1; if (sel >= nent) sel = 0; }
+        return 1;
     case K_NO:
         if (press) { ui_open = 0; swallow_no = 1; }
         return 1;
@@ -354,15 +409,67 @@ static void draw_page(void *bmp)
         *p = 0;
         text(bmp, 1, 8, line);
     }
-    text(bmp, 64, 8, "YES:A/B");
+    text(bmp, 64, 8, "YES:A/B  V:INFO");
     text(bmp, 1, 1, "</>:REC  FN+</>:CLEAR");
+}
+
+/* 0.3: the info page: every value in the scenes, a row each: the track, the parameter, A's and B's */
+static void slot_name(char *p, int32_t k)
+{
+    static const char *const grp[4] = { "LFO", "SRC", "FLT", "AMP" };
+    static const char *const nm[4][8] = {
+        { "SPD", "MUL", "FAD", "DST", "WAV", "SPH", "MOD", "DEP" },
+        { "TUN", "PLY", "BR", "SMP", "STR", "LEN", "LOP", "LEV" },
+        { "ATK", "DEC", "SUS", "REL", "FRQ", "RES", "TYP", "ENV" },
+        { "ATK", "HLD", "DEC", "OVR", "DEL", "REV", "PAN", "VOL" } };
+    int32_t g = k >= 1 && k <= 16 ? 0 : k >= 17 && k <= 24 ? 1 : k >= 29 && k <= 36 ? 2 : k >= 38 && k <= 45 ? 3 : -1;
+    const char *a, *b;
+    if (g < 0) { *p++ = 'S'; num(p, k); return; }
+    a = grp[g]; b = nm[g][g == 0 ? (k - 1) & 7 : k - (g == 1 ? 17 : g == 2 ? 29 : 38)];
+    while (*a) *p++ = *a++;
+    if (g == 0) *p++ = k <= 8 ? '1' : '2';
+    *p++ = ' ';
+    while (*b) *p++ = *b++;
+    *p = 0;
+}
+static void val_text(char *p, int16_t v)
+{
+    int32_t x = v >> 8;
+    if (v == NONE) { p[0] = '-'; p[1] = '-'; p[2] = 0; return; }
+    if (x < 0) { *p++ = '-'; x = -x; }
+    num(p, x);
+}
+static void draw_info(void *bmp)
+{
+    char line[24], n[8];
+    fw_fillrect(bmp, 0, 0, 127, 63, 0);
+    text(bmp, 1, 57, "SCENE INFO");
+    text(bmp, 84, 57, "A");
+    text(bmp, 108, 57, "B");
+    fw_fillrect(bmp, 0, 54, 127, 54, 1);
+    if (!nent) text(bmp, 1, 40, "NOTHING IN THE SCENES");
+    int32_t rows = 6, top = sel - rows / 2;
+    if (top > nent - rows) top = nent - rows;
+    if (top < 0) top = 0;
+    for (int32_t r = 0; r < rows && top + r < nent; r++) {
+        const struct ent *e = &ents[top + r];
+        int32_t y = 46 - r * 7;
+        line[0] = 'T'; line[1] = (char)('1' + e->t); line[2] = ' ';
+        slot_name(line + 3, e->k);
+        text(bmp, 1, y, line);
+        val_text(n, e->v[0]); text(bmp, 80, y, n);
+        val_text(n, e->v[1]); text(bmp, 104, y, n);
+        if (top + r == sel) fw_fillrect(bmp, 0, y - 1, 127, y + 5, -1);
+    }
+    fw_fillrect(bmp, 0, 7, 127, 7, 1);
+    text(bmp, 1, 1, "FN+</>:CLR A/B  FN+YES:ROW");
 }
 
 void sc_draw(void *bmp, void *ctrl)
 {
     (void)ctrl;
     if (ui_open) {
-        draw_page(bmp);
+        if (info) draw_info(bmp); else draw_page(bmp);
         return;
     }
     if (rec) {                                          /* recording: a box at the top */
@@ -378,6 +485,8 @@ void sc_tick(void *ctrl)
         loaded = 1;
         load();
     }
+    if (loaded && pj_tick())                            /* a project loaded or saved */
+        sel = 0;
     if (save_wait > 0 && --save_wait == 0)
         save();
     if (ui_open || rec)

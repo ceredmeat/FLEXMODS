@@ -17,6 +17,7 @@
  * The page draws the curve: what comes out for what goes in. The eight tracks' settings are saved. It
  * works on each track's audio in ev_render_voices (the sample playback's block, before the filter). */
 #include <stdint.h>
+#include "../common/heapbuf.h"
 #include "digitakt-mk1/core3.h"
 #include "../common/mpui.h"
 
@@ -149,7 +150,7 @@ typedef int32_t (*emmc_fn)(int32_t block, int32_t bytes, void *buf);
 #define EMMC_READ  ((emmc_fn)EMMC_READ_AT)
 #define EMMC_WRITE ((emmc_fn)EMMC_WRITE_AT)
 #define MAGIC 0x44525645u                            /* "DRVE" */
-static uint8_t block[512] __attribute__((aligned(16)));
+HEAP_BUF(block, 512)          /* borrowed from the heap while loading or saving */
 static int32_t save_wait, loaded, ticks;
 
 /* 0.4: everything from here on is the saving, the screen and the knobs: built small. The sound above is unchanged. */
@@ -157,8 +158,14 @@ static int32_t save_wait, loaded, ticks;
 #define MAGIC2 0x44525632u                           /* "DRV2": 0.5's, with the gate */
 #define NEW_AT (8 + 8 * OLD_KNOBS)                   /* the gate's three a track, after 0.4's five */
 static uint32_t sum_of(int32_t n) { uint32_t sum = 0; for (int i = 8; i < 8 + n; i++) sum = sum * 31u + block[i]; return sum; }
+/* the settings go with the project (common/projsave.h, through PROJECT LINK): each slot's copy at
+ * PJ_BASE + slot x PJ_NB */
+#define PJ_BASE 0x62280
+#define PJ_NB 1
+#include "../common/projsave.h"
 static void load(void)
 {
+    if (!block_ready()) return;
     uint32_t *w = (uint32_t *)block;
     for (int t = 0; t < 8; t++) for (int k = 0; k < KNOBS; k++) kv[t][k] = kdef[k];
     for (int i = 0; i < 512; i++) block[i] = 0;
@@ -175,6 +182,7 @@ static void load(void)
 }
 static void save(void)
 {
+    if (!block_ready()) return;
     uint32_t *w = (uint32_t *)block;
     for (int i = 0; i < 512; i++) block[i] = 0;
     for (int t = 0; t < 8; t++) for (int k = 0; k < KNOBS; k++) {
@@ -184,6 +192,7 @@ static void save(void)
     w[0] = MAGIC2; w[1] = sum_of(8 * KNOBS);
     EMMC_WRITE(SAVE_BLOCK, 512, block);
 }
+static void pj_defaults(void) { for (int t = 0; t < 8; t++) for (int k = 0; k < KNOBS; k++) kv[t][k] = kdef[k]; }
 
 /* ---- the page ------------------------------------------------------------------------------------------ */
 static int32_t turned[KNOBS], hl_k = -1, hl_ticks;
@@ -255,6 +264,7 @@ void dr_tick(void *ctrl)
 {
     (void)ctrl;
     if (!loaded && ++ticks > 30) { loaded = 1; load(); }
+    if (loaded) pj_tick();                           /* a project loaded or saved */
     if (save_wait > 0 && --save_wait == 0) save();
     if (hl_ticks > 0 && --hl_ticks == 0 && core_mview) fw_invalidate(core_mview);
     static int8_t dk_v[8] = { -1, -1, -1, -1, -1, -1, -1, -1 };

@@ -1,4 +1,4 @@
-# Mute Snapshots 0.1 (Digitakt MKI, OS 1.54)
+# Mute Snapshots 0.2 (Digitakt MKI, OS 1.54)
 
 Four saved sets of track mutes you can jump between in time, like the Octatrack's mute scenes.
 
@@ -28,3 +28,10 @@ Four saved sets of track mutes you can jump between in time, like the Octatrack'
 - Saved in one eMMC block (0x60043), like the other mods' settings.
 
 Needs **seq-events**. Takes YES/NO + trig 1-4; nothing else.
+
+## Changes
+
+| Version | What changed |
+|---|---|
+| 0.2 | The save buffer is borrowed from the Digitakt's spare memory only while loading or saving, which leaves more RAM for your other mods. |
+

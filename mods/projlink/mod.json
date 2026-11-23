@@ -1,0 +1,30 @@
+{
+ "id": "projlink",
+ "version": "0.1",
+ "title": "PROJECT LINK: lets mods keep their settings with each project",
+ "category": "System",
+ "license": "GPL-2.0-or-later",
+ "author": "Cere, made with Claude",
+ "description": "A helper for other mods: it notes when the Digitakt starts a new project, loads a project, or saves one, and in which slot, so mods can keep their settings with the project (saved when you SAVE PROJECT, back when you load it, defaults for a new one). It does nothing by itself.",
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "sources": [
+  "projlink.s"
+ ],
+ "sites": [
+  { "addr": "0x4001a5f0", "stock": "243c40014898", "op": "jsr", "target": "pl_new_s" },
+  { "addr": "0x4001a906", "stock": "263c400149fa", "op": "jsr", "target": "pl_load_s" },
+  { "addr": "0x4004f1f2", "stock": "242e0008280e", "op": "jsr", "target": "pl_save_s" }
+ ],
+ "requires": [
+  "core"
+ ],
+ "resources": {
+  "names": [
+   "site:Project::initializeNewProject",
+   "site:Project::loadProjectFromMmc",
+   "site:ProjectManager::interactiveSave"
+  ],
+  "core": "4.2"
+ }
+}

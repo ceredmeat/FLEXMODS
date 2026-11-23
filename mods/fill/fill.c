@@ -11,6 +11,7 @@
  * Each choice comes from a hash of the step, the track, the loop (seq-events' parity) and a seed drawn
  * each time FILL starts, so both reads of a step agree and every loop is different. */
 #include <stdint.h>
+#include "../common/heapbuf.h"
 #include "digitakt-mk1/core3.h"
 #include "digitakt-mk1/seq.h"
 
@@ -77,11 +78,12 @@ typedef int32_t (*emmc_fn)(int32_t block, int32_t bytes, void *buf);
 #define EMMC_READ  ((emmc_fn)EMMC_READ_AT)
 #define EMMC_WRITE ((emmc_fn)EMMC_WRITE_AT)
 #define SAVE_MAGIC 0x46494c4cu                          /* "FILL" */
-static uint8_t block[512] __attribute__((aligned(16)));
+HEAP_BUF(block, 512)          /* borrowed from the heap while loading or saving */
 static int32_t save_wait, loaded, ticks;
 
 static void load(void)
 {
+    if (!block_ready()) return;
     uint32_t *w = (uint32_t *)block;
     for (int32_t i = 0; i < 512; i++) block[i] = 0;
     if (EMMC_READ(SAVE_BLOCK, 512, block) != 0)
@@ -92,6 +94,7 @@ static void load(void)
 
 static void save(void)
 {
+    if (!block_ready()) return;
     uint32_t *w = (uint32_t *)block;
     for (int32_t i = 0; i < 512; i++) block[i] = 0;
     w[0] = SAVE_MAGIC;
@@ -174,8 +177,11 @@ void fl_draw(void *bmp, void *ctrl)
     fw_textf(bmp, fw_font5, 44, 56, 12, "%s", t);
 }
 
+/* 0.3: shared, for VISUALS' FILL glitch: [0] FILL playing, [1] the amount 0-100 */
+volatile int32_t fill_kv[2];
 void fl_tick(void *ctrl)
 {
+    fill_kv[0] = on; fill_kv[1] = amount;
     if (!loaded && ++ticks > 30) {
         loaded = 1;
         load();

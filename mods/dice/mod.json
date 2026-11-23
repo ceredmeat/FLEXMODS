@@ -1,0 +1,65 @@
+{
+ "id": "dice",
+ "version": "0.1",
+ "title": "DICE + AUTOPILOT: random rhythms and a slowly evolving pattern, live",
+ "category": "Sequencer",
+ "license": "GPL-2.0-or-later",
+ "author": "Cere, made with Claude",
+ "description": "One master page (DCE). Per track: DICE rolls a random rhythm (weighted toward the downbeats; replace your trigs or add to them) with YES, and AUTOPILOT flips a step or two every 1, 2, 4 or 8 loops so the pattern slowly evolves, with a HOME knob pulling it back toward what you programmed. NO puts the track back exactly as programmed. Live: the pattern in memory is never written. Rolls and settings saved. Needs seq-events.",
+ "device": "digitakt-mk1",
+ "os": "1.54",
+ "sources": [
+  "dice.c"
+ ],
+ "cflags": [
+  "-Os",
+  "-fno-tree-loop-distribute-patterns",
+  "-DEMMC_READ_AT=0x400e2c14",
+  "-DEMMC_WRITE_AT=0x400e2dfa",
+  "-DSAVE_BLOCK=0x6004e"
+ ],
+ "subscribe": [
+  {
+   "event": "ev_tick",
+   "fn": "dc_tick",
+   "order": 93
+  },
+  {
+   "event": "ev_gen_trig",
+   "fn": "dc_gen_trig",
+   "order": 98
+  }
+ ],
+ "contribute": [
+  {
+   "to": "core_mpages",
+   "order": 90,
+   "data": "00000000",
+   "relocs": [
+    [
+     0,
+     "abs32",
+     "sym:dc_page",
+     0
+    ]
+   ]
+  }
+ ],
+ "requires": [
+  "core",
+  "seq-events"
+ ],
+ "resources": {
+  "names": [
+   "ui:master page DCE",
+   "emmc:0x6004e",
+   "emmc:0x62380-0x623ff"
+  ],
+  "core": "4.2"
+ },
+ "weak": [
+  "proj_gen",
+  "proj_saves",
+  "proj_slot"
+ ]
+}

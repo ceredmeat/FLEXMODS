@@ -27,6 +27,7 @@
  *
  * GRIDS' drum maps (grids.h) are Emilie Gillet's, GPL v3, so FREQSEQ is GPL v3 or later. */
 #include <stdint.h>
+#include "../common/heapbuf.h"
 #include "digitakt-mk1/core3.h"
 #include "digitakt-mk1/seq.h"
 #include "grids.h"
@@ -730,7 +731,7 @@ struct save { uint32_t magic; uint8_t version; int8_t glob[GLOBALS]; int8_t mode
               uint8_t pad[3]; uint32_t sum; };
 struct save_v1 { uint32_t magic; uint8_t version; int8_t glob[GLOBALS]; int8_t mode[NT]; int8_t prm[NT][PER_TRACK_V1];
                  uint8_t pad[3]; uint32_t sum; };
-static uint8_t block[1024] __attribute__((aligned(16)));
+HEAP_BUF(block, 1024)          /* borrowed from the heap while loading or saving */
 static int32_t save_wait, loaded, ticks;
 
 static uint32_t checksum(const uint8_t *p, int32_t n)
@@ -786,8 +787,14 @@ static void load_new(const int8_t *g, const int8_t *md, const int8_t *pr, int32_
     }
 }
 
+/* the settings go with the project (common/projsave.h, through PROJECT LINK): each slot's copy at
+ * PJ_BASE + slot x PJ_NB */
+#define PJ_BASE 0x62000
+#define PJ_NB 2
+#include "../common/projsave.h"
 static void load(void)
 {
+    if (!block_ready()) return;
     struct save *s = (struct save *)block;
     struct save_v1 *s1 = (struct save_v1 *)block;
     for (int32_t i = 0; i < 1024; i++) block[i] = 0;
@@ -813,6 +820,7 @@ static void load(void)
 
 static void save(void)
 {
+    if (!block_ready()) return;
     struct save *s = (struct save *)block;
     for (int32_t i = 0; i < 1024; i++) block[i] = 0;
     s->magic = MAGIC;
@@ -826,6 +834,7 @@ static void save(void)
     EMMC_WRITE(SAVE_BLOCK, 512, block);
     EMMC_WRITE(SAVE_BLOCK2, 512, block + 512);
 }
+static void pj_defaults(void) { defaults(); }
 
 /* ---- the page ---------------------------------------------------------------------------------------------- */
 typedef uint32_t (*fn0)(void);
@@ -876,6 +885,10 @@ int32_t ss_key(void *brain, void *ev)
     }
     if (!ui_open)
         return 0;
+    if ((key >= 19 && key <= 23) || key == 6 || key == 7) {   /* a page key (TRIG SRC FLTR AMP LFO, GLOBAL, SAMPLE): */
+        if (press) ui_open = 0;                       /* close, and let the Digitakt go straight there */
+        return 0;
+    }
     if (key == K_NO && swallow_close) {
         if (!down) swallow_close = 0;
         return 1;
@@ -1253,6 +1266,7 @@ void ss_tick(void *ctrl)
     }
     if (!loaded)
         return;
+    pj_tick();                                       /* a project loaded or saved */
     if (save_wait > 0 && --save_wait == 0)
         save();
     if (rearm) {

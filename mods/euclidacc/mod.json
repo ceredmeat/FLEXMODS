@@ -1,6 +1,6 @@
 {
  "id": "euclidacc",
- "version": "0.2",
+ "version": "0.3",
  "title": "Euclid Accents",
  "category": "Sequencer",
  "license": "GPL-2.0-or-later",
@@ -15,7 +15,8 @@
  "cflags": [
   "-DEMMC_READ_AT=0x400e2c14",
   "-DEMMC_WRITE_AT=0x400e2dfa",
-  "-DSAVE_BLOCK=0x60042"
+  "-DSAVE_BLOCK=0x60042",
+  "-Os"
  ],
  "defsym": {
   "STR_CTOR": "0x4017af20"

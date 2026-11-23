@@ -3,7 +3,7 @@
 Hold a combo and your pattern plays a random variation of itself, different every loop. Let go and
 it's back to normal. Your pattern never changes.
 
-- **Mod:** `fill` 0.1, for Elekloader
+- **Mod:** `fill` 0.3, for Elekloader
 - **Digitakt MKI, OS 1.54 only**
 - **Needs in the build:** `core` (4.1 or later) and `seq-events`
 
@@ -41,6 +41,14 @@ AMOUNT sets how much of all this happens.
 - **YES on its own** still does what it always did, and so do YES + a trig (MUTE SNAPSHOTS) and
   YES on the DJ FILTER page (FREE/SYNC). The fill only starts once NO joins YES.
 - Works alongside the other sequencer mods (DENSITY, FREQSEQ and others) through `seq-events`.
+
+---
+
+## Changes
+
+| Version | What changed |
+|---|---|
+| 0.3 | The save buffer is borrowed from the Digitakt's spare memory only while loading or saving, which leaves more RAM for your other mods. VISUALS can glitch the screen while the fill plays. |
 
 ---
 
