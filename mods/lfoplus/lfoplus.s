@@ -13,7 +13,7 @@ lfo_wave_fmt:
         moveq   #7, %d1
         cmp.l   %d1, %d0
         blt.s   1f
-        moveq   #28, %d1
+        moveq   #35, %d1
         cmp.l   %d1, %d0
         bgt.s   1f
         subq.l  #7, %d0
@@ -90,8 +90,8 @@ slowfree:
         move.l  #14400, %d1
         jmp     0x400ed7e0
 
-| The LFO page's graph, 0x4009700a: d5 the wave, held to 0..28 now; d6 = 12 x d5 here, and the stock
-| adds the sheet list 0x4208d6b4 (addi.l #0x4208d6b4,d6, 6 bytes), replaced by "jsr" to this. For 7..28
+| The LFO page's graph, 0x4009700a: d5 the wave, held to 0..35 now; d6 = 12 x d5 here, and the stock
+| adds the sheet list 0x4208d6b4 (addi.l #0x4208d6b4,d6, 6 bytes), replaced by "jsr" to this. For 7..35
 | d6 becomes our sheet instead.
         .globl  lfo_graph_sheet_s
 lfo_graph_sheet_s:

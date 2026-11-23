@@ -1,6 +1,46 @@
-# LFO+ 0.5: new waves and slow speeds (Digitakt MKI, OS 1.54)
+# LFO+ 0.6: new waves, slow speeds, Deja Vu and an LFO 3/3 page (Digitakt MKI, OS 1.54)
 
-**New in 0.5:** clean-up. The small 19x17 pictures and the two picture hooks from 0.2 and 0.3 are
+**New in 0.6: LFO+ and Deja Vu are one mod.** Everything the separate Deja Vu mod did is now built into
+LFO+, as a mode of the **RND** wave, and LFO+ gains seven more waves and a third LFO page, after
+Arvid Solander's DEJA VU for the Digitakt MKI (MIT; see `NOTICE-MIT.txt`).
+
+- **Deja Vu, now inside LFO+.** Unchanged: SETTINGS > **RND LOOP** (OFF, 2-8, 12, 16, 32 values),
+  **RND LOCK** (0-100%, or PHAS: each LFO's own PHAS knob, saved with the sound and lockable) and
+  **RND TRIG** (FREE, RESTART), and **RND Lock** / **RND Loop** in the LFO DEST list (group RND).
+  RND LOOP OFF is the stock RND. Your saved Deja Vu settings carry over. Don't install the old Deja
+  Vu mod alongside: elekloader refuses the pair.
+- **Seven new waves** after LFO+'s 22 (audio tracks; flat on the MIDI tracks' LFO), each with a
+  graph on the LFO page:
+
+| Wave | What it does | SPH | MODE |
+|---|---|---|---|
+| **DVF** | A loop of random values, running free | 0 a new value every step, 64 the loop locked, 127 the same values reshuffled | the loop's length: FRE 2, TRG 4, HLD 8, ONE 16, HLF 32 steps |
+| **DVT** | The same loop, back at its start on each trig | as DVF | as DVF |
+| **LOG** | Logistic-map chaos, stepped (16 values a cycle) | the amount of chaos: order to chaos | FRE free; TRG the same phrase again on each trig; HLD free, held from each trig; ONE/HLF play once / half, then hold |
+| **HEN** | Henon-map chaos, stepped | as LOG | as LOG |
+| **LOR** | The Lorenz attractor, smooth | as LOG | as LOG |
+| **AEN** | Another track's AMP envelope, 0 to full (optionally times its trig's velocity) | - | - |
+| **ENV** | An envelope follower on another track's sound: duck a pad to the kick | - | - |
+
+- **LFO (3/3) page.** Press **LFO** a third time. Per track:
+
+| Knob | | What it does |
+|---|---|---|
+| **A** | TRG1 | LFO 1 restarts on: OWN (its own trigs) or T1-T8 (that track's trigs). Works for every wave, stock ones and RND loops too |
+| **B** | FOL1 | The track AEN/ENV follows for LFO 1 |
+| **C** | TRG2 | As TRG1, for LFO 2 |
+| **D** | FOL2 | As FOL1, for LFO 2 |
+| **E** | ATK | ENV's attack (0 instant ... 127 about 2 s) |
+| **F** | REL | ENV's release |
+| **G** | VEL | AEN scaled by the source trig's velocity: OFF / ON |
+| **H** | GAIN | ENV's gain, x1 to x16 |
+
+  Press a knob while turning for fine steps; hold FUNC and turn to jump to an end. These settings
+  are saved two seconds after a change and come back at power-on.
+
+**Needs** core 4.3 and seq-events (for the trig sources).
+
+**0.5:** clean-up. The small 19x17 pictures and the two picture hooks from 0.2 and 0.3 are
 gone: the LFO page never used them (it draws the graph below). Smaller, two fewer firmware hooks,
 nothing you can see changes.
 
@@ -83,3 +123,8 @@ calls to anything else.
   to RND and MULT to its top value, so you won't get errors.
 - Trig modes ONE and HLF hold new waves at the centre value, which is what most stock waves do too.
 - If the LFO page ever shows "ERR" for WAVE or MULT, tell me.
+
+## Tested on a unit
+
+Tested on a Digitakt MKI, OS 1.54 (0.6): the Deja Vu RND loop with your saved settings carried
+over, the seven new waves, and the LFO 3/3 page with its settings saved.

@@ -1,6 +1,6 @@
 # flexmods
 
-Twenty-nine Elekloader mods for the **Elektron Digitakt MKI, OS 1.54**, made by Cere (with Claude).
+Twenty-eight Elekloader mods for the **Elektron Digitakt MKI, OS 1.54**, made by Cere (with Claude).
 Each mod is its own `.elemod`: pick the ones you want in Elekloader, build your OS and flash it.
 
 **Download:** the `.elemod` files are in the [latest release](../../releases/latest).
@@ -50,8 +50,7 @@ Each mod is its own `.elemod`: pick the ones you want in Elekloader, build your 
 
 | Mod | File | What it does | Needs |
 |---|---|---|---|
-| LFO+ | `lfoplus-0.5.elemod` | 22 new LFO waves (incl. 16 shapes after the Jomox Alphabase), each with its own picture, plus slower speeds | core |
-| DEJA VU | `dejavu-0.6.elemod` | The RND LFO plays a repeating loop of random values, with RND LOCK / RND LOOP as LFO destinations | core |
+| LFO+ | `lfoplus-0.6.elemod` | 29 new LFO waves (incl. 16 shapes after the Jomox Alphabase, chaos waves and an envelope follower for ducking), slower speeds, Deja Vu's looping RND built in, and an LFO 3/3 page to restart an LFO on another track's trigs | core, seq-events |
 
 ### Display and settings
 
@@ -61,7 +60,7 @@ Each mod is its own `.elemod`: pick the ones you want in Elekloader, build your 
 | DASH | `dash-0.2.elemod` | The active track's SRC, LFO, filter and amp values on one screen, as bars, with the last one that moved named | core |
 | HELP | `help-0.1.elemod` | A mini manual on a master page: a card of keys and knobs for each mod in your build | core |
 | REAL UNITS | `realunits-0.2.elemod` | Filter FREQ in Hz, envelope times in ms/s, LFO speed as a cycle length or Hz | core |
-| MOD SETTINGS | `modsettings-0.1.elemod` | Optional: folds the DEJA VU, HUMANISE, EUCLID ACCENTS and MIDI ARP rows in SETTINGS into one MOD SETTINGS row | core |
+| MOD SETTINGS | `modsettings-0.1.elemod` | Optional: folds the RND LOOP (LFO+), HUMANISE, EUCLID ACCENTS and MIDI ARP rows in SETTINGS into one MOD SETTINGS row | core |
 | PROJECT LINK | `projlink-0.1.elemod` | A helper: with it, FREQSEQ, SCENES, DRIVE, REVERSE, DICE, SONIC MAX, G-EQ and GLUE keep their settings with each project (defaults for a new one) | core |
 
 ---
@@ -97,8 +96,17 @@ contain Elektron's firmware.
 
 ---
 
+## Deja Vu is now part of LFO+
+
+Since LFO+ 0.6, the separate DEJA VU mod is gone: its looping RND, SETTINGS rows and RND destinations
+are built into LFO+, and saved settings carry over. Don't put an old `dejavu` file in the same build:
+Elekloader refuses the pair.
+
+---
+
 ## Licence
 
 GPL-2.0-or-later (see LICENSE), except **FREQSEQ**, which is GPL-3.0-or-later because of the Grids
-drum maps (see `mods/freqseq/LICENSE`). `mods/common/` holds the shared code several mods include: `mpui.h` (page drawing), `heapbuf.h`
+drum maps (see `mods/freqseq/LICENSE`). LFO+ includes MIT-licensed parts from Arvid Solander's
+DEJA VU (see `mods/lfoplus/NOTICE-MIT.txt`). `mods/common/` holds the shared code several mods include: `mpui.h` (page drawing), `heapbuf.h`
 (save buffers), `projsave.h` (settings per project) and `fmul.h` (fast fixed-point maths).

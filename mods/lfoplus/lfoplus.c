@@ -112,7 +112,17 @@ static int32_t table_wave(const int16_t *t, uint32_t phase)
 #define JX(k) int32_t lfo_jx##k(uint32_t phase) { return table_wave(jx_table[k], phase); }
 JX(0) JX(1) JX(2) JX(3) JX(4) JX(5) JX(6) JX(7) JX(8) JX(9) JX(10) JX(11) JX(12) JX(13) JX(14) JX(15)
 
-#define WAVES 29                                /* 0..6 stock, 7..12 LFO+'s, 13..28 the Alphabase's */
+#define WAVES 36                                /* 0..6 stock, 7..12 LFO+'s, 13..28 the Alphabase's,
+                                                   29..35 the Deja Vu waves (dvwaves.c, chaos.c, follow.c) */
+
+/* 29..35 on the MIDI tracks' LFO: the Deja Vu waves need the audio engine's per-voice state, so the
+ * MIDI LFO stays flat there (no modulation). The audio engine never reads these: dvsites.s takes
+ * 29..35 before the table. */
+static int32_t lfo_flat(uint32_t phase)
+{
+    (void)phase;
+    return 0;
+}
 
 /* the wave table the engines read: the six stock routines, a stand-in for RND (never called: the
  * engines handle 6 themselves), then ours */
@@ -123,6 +133,7 @@ const wave_fn lfo_waves[WAVES] = {
     lfo_pls, lfo_stp, lfo_trp, lfo_bmp, lfo_fin, lfo_bnc,
     lfo_jx0, lfo_jx1, lfo_jx2, lfo_jx3, lfo_jx4, lfo_jx5, lfo_jx6, lfo_jx7,
     lfo_jx8, lfo_jx9, lfo_jx10, lfo_jx11, lfo_jx12, lfo_jx13, lfo_jx14, lfo_jx15,
+    lfo_flat, lfo_flat, lfo_flat, lfo_flat, lfo_flat, lfo_flat, lfo_flat,
 };
 
 /* the ONE / HLF hold values by wave: the stock seven, then 0 */
@@ -131,7 +142,8 @@ const int32_t lfo_hold_up[WAVES]   = {0, 0, 0, 0, 0, 0, 0};        /* stock 0x40
 const int32_t lfo_hold_down[WAVES] = {0, 0, 0, 0, HI, 0, 0};       /* stock 0x401bcdfc */
 
 /* WAVE's text for the new values */
-const char *const lfo_wave_names[WAVES - 7] = {"PLS", "STP", "TRP", "BMP", "FIN", "BNC", JX_NAMES};
+const char *const lfo_wave_names[WAVES - 7] = {"PLS", "STP", "TRP", "BMP", "FIN", "BNC", JX_NAMES,
+                                              "DVF", "DVT", "LOG", "HEN", "LOR", "AEN", "ENV"};
 
 /* 0.2 and 0.3 drew 19 x 17 pictures through the knob-picture code (0x4006047a, 0x4000f2bc); the LFO
  * page never draws WAVE that way, so 0.5 drops them. The page's graph is below. */
@@ -146,17 +158,19 @@ struct icon { const void *vt; int32_t width, height, one; const uint32_t *px, *m
  * points the routine at the sheets below instead. The frames are made by gen_jomox.py, which draws the
  * stock TRI frame exactly the same way as a check. */
 #define GRAPH_MASK ((const uint32_t *)0x4022e724)    /* the stock graphs' mask: every row */
-static const uint32_t graph_px[WAVES - 7][4][28] = { GRAPH_FRAMES };
+#include "dvgraphs.h"
+static const uint32_t graph_px[WAVES - 7][4][28] = { GRAPH_FRAMES DV_GRAPH_FRAMES };
 #define GF(k, f) {fw_bitmap_vt, 28, 15, 1, graph_px[k][f], GRAPH_MASK, 0}
 #define GW(k) GF(k, 0), GF(k, 1), GF(k, 2), GF(k, 3)
 static const struct icon graph_frames[WAVES - 7][4] = {
     {GW(0)}, {GW(1)}, {GW(2)}, {GW(3)}, {GW(4)}, {GW(5)}, {GW(6)}, {GW(7)}, {GW(8)}, {GW(9)}, {GW(10)},
     {GW(11)}, {GW(12)}, {GW(13)}, {GW(14)}, {GW(15)}, {GW(16)}, {GW(17)}, {GW(18)}, {GW(19)}, {GW(20)},
-    {GW(21)},
+    {GW(21)}, {GW(22)}, {GW(23)}, {GW(24)}, {GW(25)}, {GW(26)}, {GW(27)}, {GW(28)},
 };
 struct sheet { const struct icon *first, *end, *cap; };
 #define SH(k) {graph_frames[k], graph_frames[k] + 4, graph_frames[k] + 4}
 const struct sheet lfo_graph_sheets[WAVES - 7] = {
     SH(0), SH(1), SH(2), SH(3), SH(4), SH(5), SH(6), SH(7), SH(8), SH(9), SH(10),
     SH(11), SH(12), SH(13), SH(14), SH(15), SH(16), SH(17), SH(18), SH(19), SH(20), SH(21),
+    SH(22), SH(23), SH(24), SH(25), SH(26), SH(27), SH(28),
 };

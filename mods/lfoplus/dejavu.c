@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: GPL-2.0-or-later */
-/* Deja Vu for the Digitakt mk1 (OS 1.54), after the Octatrack mod: the LFO's RND wave plays a loop
+/* Deja Vu, part of LFO+ since 0.6, for the Digitakt mk1 (OS 1.54), after the Octatrack mod: the LFO's RND wave plays a loop
  * of random values instead of new ones forever.
  *
  * SETTINGS gets two rows:
@@ -23,13 +23,12 @@
  *     call comes from a trig (the audio engine keeps that at 52(sp), the MIDI engine in d5).
  *   - with RND LOOP off we do exactly what the stock routine does. */
 #include <stdint.h>
-#include "../common/heapbuf.h"
 #include "digitakt-mk1/core3.h"
 
 typedef int32_t (*emmc_fn)(int32_t block, int32_t bytes, void *buf);   /* 0 on success */
 #define EMMC_READ  ((emmc_fn)EMMC_READ_AT)
 #define EMMC_WRITE ((emmc_fn)EMMC_WRITE_AT)
-static int32_t save_wait;               /* ticks until the pending save; 0 = nothing pending */
+volatile int32_t dv_save_wait;          /* ticks until the pending save; 0 = nothing pending (ui.c sets it too) */
 
 #define SEED_A   ((volatile uint32_t *)SEED_A_AT)
 #define SEED_B   ((volatile uint32_t *)SEED_B_AT)
@@ -186,7 +185,7 @@ static void step_row(int32_t row, int32_t delta)
     } else {
         restart = !restart;
     }
-    save_wait = 60;                     /* saved two seconds after the last change */
+    dv_save_wait = 60;                     /* saved two seconds after the last change */
 }
 
 static void put_num(char *p, int32_t v, int32_t pct)
@@ -247,10 +246,18 @@ void dv_settings(void *menu)
     core_additem(menu, dv_row_trig);
 }
 
-/* ---- saving (the same way ledcolors saves) --------------------------------------------------------- */
+/* ---- saving (the same way ledcolors saves) --------------------------------------------------------- *
+ * Version 1 (0.2-0.5): the three SETTINGS rows. Version 2 (0.6): the same, then the LFO (3/3) page's
+ * settings for the eight tracks (ui.c, follow.c), so they come back at power-on too. A version 1 block
+ * still loads: the page then starts at its defaults. */
 #define SAVE_MAGIC 0x444a5655u          /* "DJVU" */
-struct save { uint32_t magic; uint8_t version, len_i, lock_pct, restart; uint32_t sum; };
-HEAP_BUF(block, 512)          /* borrowed from the heap while loading or saving */
+struct dv3_cfg { uint8_t trg[2], fol[2], atk, rel, vel, gain; };
+extern volatile struct dv3_cfg dv3_cfg[8];
+extern volatile uint8_t dv3_any_trg;
+volatile int32_t dv3_cfg_loaded;        /* the page's settings came from the save: ui.c keeps them */
+struct save1 { uint32_t magic; uint8_t version, len_i, lock_pct, restart; uint32_t sum; };
+struct save2 { uint32_t magic; uint8_t version, len_i, lock_pct, restart; struct dv3_cfg cfg[8]; uint32_t sum; };
+static uint8_t block[512] __attribute__((aligned(16)));
 static int32_t loaded, ticks;
 
 static uint32_t checksum(const uint8_t *p, int32_t n)
@@ -264,31 +271,60 @@ static uint32_t checksum(const uint8_t *p, int32_t n)
 
 static void load(void)
 {
-    if (!block_ready()) return;
-    struct save *s = (struct save *)block;
-    int32_t i;
+    struct save1 *s1 = (struct save1 *)block;
+    struct save2 *s2 = (struct save2 *)block;
+    int32_t i, t, any = 0;
     for (i = 0; i < 512; i++) block[i] = 0;
-    if (EMMC_READ(SAVE_BLOCK, 512, block) != 0)
+    if (EMMC_READ(SAVE_BLOCK, 512, block) != 0 || s1->magic != SAVE_MAGIC)
         return;
-    if (s->magic != SAVE_MAGIC || s->version != 1
-        || s->sum != checksum(block, (int32_t)((uint8_t *)&s->sum - block)))
+    if (s1->version == 1) {
+        if (s1->sum != checksum(block, (int32_t)((uint8_t *)&s1->sum - block)))
+            return;
+    } else if (s1->version == 2) {
+        if (s2->sum != checksum(block, (int32_t)((uint8_t *)&s2->sum - block)))
+            return;
+        for (t = 0; t < 8; t++) {       /* each value checked, as the page's knobs allow */
+            const struct dv3_cfg *c = &s2->cfg[t];
+            dv3_cfg[t].trg[0] = c->trg[0] <= 8 ? c->trg[0] : 0;
+            dv3_cfg[t].trg[1] = c->trg[1] <= 8 ? c->trg[1] : 0;
+            dv3_cfg[t].fol[0] = c->fol[0] & 7;
+            dv3_cfg[t].fol[1] = c->fol[1] & 7;
+            dv3_cfg[t].atk = c->atk <= 127 ? c->atk : 8;
+            dv3_cfg[t].rel = c->rel <= 127 ? c->rel : 60;
+            dv3_cfg[t].vel = c->vel ? 1 : 0;
+            dv3_cfg[t].gain = c->gain <= 127 ? c->gain : 32;
+            any |= dv3_cfg[t].trg[0] | dv3_cfg[t].trg[1];
+        }
+        dv3_any_trg = (uint8_t)(any != 0);
+        dv3_cfg_loaded = 1;
+    } else {
         return;                         /* nothing saved yet: the defaults stay */
-    if (s->len_i < LENS) len_i = s->len_i;
-    if (s->lock_pct <= 110) lock_pct = s->lock_pct;
-    restart = s->restart ? 1 : 0;
+    }
+    if (s1->len_i < LENS) len_i = s1->len_i;
+    if (s1->lock_pct <= 110) lock_pct = s1->lock_pct;
+    restart = s1->restart ? 1 : 0;
 }
 
 static void save(void)
 {
-    if (!block_ready()) return;
-    struct save *s = (struct save *)block;
-    int32_t i;
+    struct save2 *s = (struct save2 *)block;
+    int32_t i, t;
     for (i = 0; i < 512; i++) block[i] = 0;
     s->magic = SAVE_MAGIC;
-    s->version = 1;
+    s->version = 2;
     s->len_i = (uint8_t)len_i;
     s->lock_pct = (uint8_t)lock_pct;
     s->restart = (uint8_t)restart;
+    for (t = 0; t < 8; t++) {
+        s->cfg[t].trg[0] = dv3_cfg[t].trg[0];
+        s->cfg[t].trg[1] = dv3_cfg[t].trg[1];
+        s->cfg[t].fol[0] = dv3_cfg[t].fol[0];
+        s->cfg[t].fol[1] = dv3_cfg[t].fol[1];
+        s->cfg[t].atk = dv3_cfg[t].atk;
+        s->cfg[t].rel = dv3_cfg[t].rel;
+        s->cfg[t].vel = dv3_cfg[t].vel;
+        s->cfg[t].gain = dv3_cfg[t].gain;
+    }
     s->sum = checksum(block, (int32_t)((uint8_t *)&s->sum - block));
     EMMC_WRITE(SAVE_BLOCK, 512, block);
 }
@@ -300,6 +336,6 @@ void dv_tick(void *ctrl)
         loaded = 1;
         load();
     }
-    if (save_wait > 0 && --save_wait == 0)
+    if (dv_save_wait > 0 && --dv_save_wait == 0)
         save();
 }

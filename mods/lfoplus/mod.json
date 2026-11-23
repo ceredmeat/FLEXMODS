@@ -1,30 +1,37 @@
 {
  "id": "lfoplus",
- "version": "0.5",
- "title": "LFO+: new waves and slow speeds",
+ "version": "0.6",
+ "title": "LFO+: new LFO waves, slower speeds, Deja Vu loops on RND, and an LFO 3/3 page",
  "category": "Sound",
  "license": "GPL-2.0-or-later",
- "author": "Cere, made with Claude",
- "description": "22 new LFO waves after RND on the WAVE knob, each with its own picture on the LFO page (audio and MIDI tracks): PLS pulse, STP staircase, TRP trapezoid, BMP double bump, FIN shark fin, BNC bouncing ball, then 16 shapes from the Jomox Alphabase: DIP HSU HSD DCY GRW SFL BWL NTC TSQ TTH DBV ZIG SEQ CHS NSE SPK. Four slower speeds after 2k on the audio tracks' MULT knob: /2 /4 /8 /16 in time with the tempo, then the same four free-running.",
+ "author": "Cere, made with Claude; the chaos, follower and trig-source parts from Arvid Solander's DEJA VU 0.3 (dejavu-dt, MIT)",
+ "description": "29 new LFO waves after RND on the WAVE knob, each with its picture on the LFO page: PLS STP TRP BMP FIN BNC; 16 Jomox Alphabase shapes (DIP HSU HSD DCY GRW SFL BWL NTC TSQ TTH DBV ZIG SEQ CHS NSE SPK); and, on the audio tracks, DVF/DVT (a random loop, free or restarted on each trig: MODE its length 2-32, SPH 0 new values, 64 locked, 127 reshuffled), LOG HEN LOR (logistic, Henon, Lorenz chaos: SPH the amount; MODE FRE TRG HLD ONE HLF), AEN (another track's AMP envelope) and ENV (an envelope follower on another track's sound, for sidechain-style ducking). Four slower MULT speeds after 2k (/2 /4 /8 /16, synced or free). Deja Vu is built in, as a mode of the RND wave: SETTINGS > RND LOOP (OFF, 2-32 values), RND LOCK (0-100% or PHAS, each LFO's PHAS knob, lockable) and RND TRIG (FREE, RESTART); RND Lock and RND Loop are in the LFO DEST list (group RND). RND LOOP OFF is the stock RND. LFO (3/3) page: A TRG1 / C TRG2 restart LFO 1/2 on another track's trigs (any wave, RND loops too), B FOL1 / D FOL2 the AEN/ENV source track, E ATK, F REL, G VEL, H GAIN for the follower. All settings are saved. The Deja Vu waves are flat on the MIDI tracks' LFO. Replaces the separate Deja Vu mod (settings carry over). Needs core 4.3 and seq-events.",
  "device": "digitakt-mk1",
  "os": "1.54",
  "sources": [
   "lfoplus.c",
-  "lfoplus.s"
+  "lfoplus.s",
+  "dejavu.c",
+  "dejavu.s",
+  "dvwaves.c",
+  "chaos.c",
+  "follow.c",
+  "ui.c",
+  "dvsites.s"
  ],
  "sites": [
   {
    "addr": "0x401aac08",
    "stock": "00000600",
    "op": "bytes",
-   "new": "00001c00",
+   "new": "00002300",
    "kind": "data"
   },
   {
    "addr": "0x401aaddc",
    "stock": "00000600",
    "op": "bytes",
-   "new": "00001c00",
+   "new": "00002300",
    "kind": "data"
   },
   {
@@ -101,14 +108,14 @@
    "addr": "0x400ed4fc",
    "stock": "7206",
    "op": "bytes",
-   "new": "721c",
+   "new": "7223",
    "kind": "code"
   },
   {
    "addr": "0x400ed502",
    "stock": "7606",
    "op": "bytes",
-   "new": "761c",
+   "new": "7623",
    "kind": "code"
   },
   {
@@ -139,14 +146,14 @@
    "addr": "0x40097016",
    "stock": "7c06",
    "op": "bytes",
-   "new": "7c1c",
+   "new": "7c23",
    "kind": "code"
   },
   {
    "addr": "0x40097038",
    "stock": "7a06",
    "op": "bytes",
-   "new": "7a1c",
+   "new": "7a23",
    "kind": "code"
   },
   {
@@ -160,16 +167,149 @@
    "stock": "42a7123658f9",
    "op": "jsr",
    "target": "lfo_graph_flag_s"
+  },
+  {
+   "addr": "0x400ed3fc",
+   "stock": "22394020df20",
+   "op": "jmp",
+   "target": "dv_rand"
+  },
+  {
+   "addr": "0x401aa2d8",
+   "stock": "ffffffffffffffff0000000000000000000000000000000100630062ffffffff0000000b00000000",
+   "op": "bytes",
+   "kind": "data",
+   "new": "000000040000002e0000000000007f000000000000000001ffffffffffffffff0000000b00000e00"
+  },
+  {
+   "addr": "0x401aa300",
+   "stock": "401c2568",
+   "op": "ptr",
+   "target": "dv_n_lock"
+  },
+  {
+   "addr": "0x401aa304",
+   "stock": "401c5bc7",
+   "op": "ptr",
+   "target": "dv_n_grp"
+  },
+  {
+   "addr": "0x401aa308",
+   "stock": "401c20af",
+   "op": "ptr",
+   "target": "dv_s_lock"
+  },
+  {
+   "addr": "0x401aa30c",
+   "stock": "ffffffffffffffff000000000000000000000000000000000078ffffffffffff0000000c00000000",
+   "op": "bytes",
+   "kind": "data",
+   "new": "000000040000002f0000000000007f000000000000000001ffffffffffffffff0000000c00000e00"
+  },
+  {
+   "addr": "0x401aa334",
+   "stock": "401c2568",
+   "op": "ptr",
+   "target": "dv_n_loop"
+  },
+  {
+   "addr": "0x401aa338",
+   "stock": "401c5bc7",
+   "op": "ptr",
+   "target": "dv_n_grp"
+  },
+  {
+   "addr": "0x401aa33c",
+   "stock": "401c20af",
+   "op": "ptr",
+   "target": "dv_s_loop"
+  },
+  {
+   "addr": "0x400ed7e0",
+   "stock": "772b00026c04",
+   "op": "jmp",
+   "target": "dv_wave_s"
+  },
+  {
+   "addr": "0x400ed812",
+   "stock": "732b00062405",
+   "op": "jmp",
+   "target": "dv_mode_s"
+  },
+  {
+   "addr": "0x400ed94c",
+   "stock": "7e06be836728",
+   "op": "jmp",
+   "target": "dv_disp_s"
   }
  ],
  "resources": {
-  "core": "4.1",
+  "core": "4.3",
   "names": [
    "lfo:waves",
-   "lfo:mult"
+   "lfo:mult",
+   "ui:SETTINGS:RND LOOP",
+   "ui:SETTINGS:RND LOCK",
+   "ui:SETTINGS:RND TRIG",
+   "emmc:0x60040",
+   "ui:LFO page 3"
   ]
  },
  "requires": [
-  "core"
+  "core",
+  "seq-events"
+ ],
+ "cflags": [
+  "-DSEED_A_AT=0x4020df1c",
+  "-DSEED_B_AT=0x4020df20",
+  "-DEMMC_READ_AT=0x400e2c14",
+  "-DEMMC_WRITE_AT=0x400e2dfa",
+  "-DSAVE_BLOCK=0x60040"
+ ],
+ "defsym": {
+  "STR_CTOR": "0x4017af20"
+ },
+ "subscribe": [
+  {
+   "event": "ev_settings",
+   "fn": "dv_settings",
+   "order": 75
+  },
+  {
+   "event": "ev_tick",
+   "fn": "dv_tick",
+   "order": 80
+  },
+  {
+   "event": "ev_fire_vel",
+   "fn": "dv3_on_vel",
+   "order": 95
+  },
+  {
+   "event": "ev_tick",
+   "fn": "dv3_tick",
+   "order": 46
+  },
+  {
+   "event": "ev_draw",
+   "fn": "dv3_draw",
+   "order": 61
+  },
+  {
+   "event": "ev_enc",
+   "fn": "dv3_enc",
+   "order": 46
+  },
+  {
+   "event": "ev_key",
+   "fn": "dv3_key",
+   "order": 46
+  }
+ ],
+ "weak": [
+  "modset_closed"
+ ],
+ "conflicts": [
+  "dejavu"
  ]
 }
