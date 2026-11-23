@@ -75,7 +75,7 @@ MUTESNAP's YES + trig, still work as before.
 
 | Version | What changed |
 |---|---|
-| 0.8 | Hold FUNC + LFO for half a second to open the master page you used last (DJ FILTER, say) instead of the first one. An idea from pituzinho on Discord. (Not yet confirmed on a unit.) |
+| 0.8 | Hold FUNC + LFO for half a second to open the master page you used last (DJ FILTER, say) instead of the first one. An idea from pituzinho on Discord. |
 | 0.7 | Tempo sync (YES toggles FREE/SYNC). Now needs `seq-events`. |
 | 0.6 | Smaller page code (the sound is unchanged). The knobs are shared with other mods, for LED COLORS' HEAT. |
 | 0.5 | Dial knobs, a shaded curve, clearer labels, arrow-key page stepping. |
@@ -85,7 +85,7 @@ MUTESNAP's YES + trig, still work as before.
 ## Tested on a unit
 
 Tested on a Digitakt MKI, OS 1.54: all filter types, resonance, BUZZ, the LFO shapes and ENV, the
-FREE/SYNC toggle and synced rates, and the LED COLORS HEAT link.
+FREE/SYNC toggle and synced rates, the LED COLORS HEAT link, and the long FUNC + LFO back to the last page (0.8).
 
 ---
 

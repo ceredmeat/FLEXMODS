@@ -76,7 +76,7 @@ closing with a soft, organic decay, like the vactrol in a Buchla.
 
 | Version | What changed |
 |---|---|
-| 0.6 | With PROJECT LINK in the build, the settings go with the project: saved when you save it, back when you load it, defaults for a new project (not yet confirmed on a unit). The save buffer is borrowed from the Digitakt's spare memory only while loading or saving, which leaves more RAM for your other mods. |
+| 0.6 | With PROJECT LINK in the build, the settings go with the project: saved when you save it, back when you load it, defaults for a new project. The save buffer is borrowed from the Digitakt's spare memory only while loading or saving, which leaves more RAM for your other mods. |
 | 0.5 | The low pass gate (F–H). |
 | 0.4 | Smaller page code; the sound is unchanged. |
 
@@ -85,7 +85,7 @@ closing with a soft, organic decay, like the vactrol in a Buchla.
 ## Tested on a unit
 
 Tested on a Digitakt MKI, OS 1.54: all four types on drum tracks, levels kept even, settings
-surviving a power cycle, and the low pass gate (0.5).
+surviving a power cycle, the low pass gate (0.5), and settings kept with the project with PROJECT LINK (0.6).
 
 ---
 

@@ -50,7 +50,7 @@ mix is right now.
 
 ## Tested on a unit
 
-Not yet confirmed on a unit: it has been run in an emulator of the Digitakt's firmware only.
+Tested on a Digitakt MKI, OS 1.54: compression on the whole mix, the needle meter, AUTO release, MIX, the side-chain high pass, IN / OUT, and the settings saved.
 
 ---
 

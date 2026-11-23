@@ -59,7 +59,7 @@ levels show as meters.
 
 ## Tested on a unit
 
-Not yet confirmed on a unit: it has been run in an emulator of the Digitakt's firmware only.
+Tested on a Digitakt MKI, OS 1.54: the enhancer on the whole mix, PRC and LOW, BBE IN / OUT, the live curve and meters, and the settings saved, with DIGIHEALTH in the build.
 
 ---
 

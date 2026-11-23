@@ -58,7 +58,7 @@ one-shot repeated. 0.4 fixes it.
 
 | Version | What changed |
 |---|---|
-| 0.5 | With PROJECT LINK in the build, the settings go with the project: saved when you save it, back when you load it, defaults for a new project (not yet confirmed on a unit). The save buffer is borrowed from the Digitakt's spare memory only while loading or saving, which leaves more RAM for your other mods. |
+| 0.5 | With PROJECT LINK in the build, the settings go with the project: saved when you save it, back when you load it, defaults for a new project. The save buffer is borrowed from the Digitakt's spare memory only while loading or saving, which leaves more RAM for your other mods. |
 | 0.4 | Fixed: trigs really play backwards. 0.2 switched to forward loop, and 0.3's reverse value was ignored by the firmware. |
 | 0.2 | The page, saving and the flashing arrows. |
 
@@ -67,7 +67,7 @@ one-shot repeated. 0.4 fixes it.
 ## Tested on a unit
 
 Tested on a Digitakt MKI, OS 1.54: trigs playing backwards at different chances, the flashing
-arrows, and settings surviving a power cycle.
+arrows, settings surviving a power cycle, and settings kept with the project with PROJECT LINK (0.5).
 
 ---
 

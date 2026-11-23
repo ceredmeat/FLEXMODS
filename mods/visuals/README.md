@@ -126,8 +126,8 @@ pattern is stopped**, so it never distracts you while you play or record.
 
 ## Tested on a unit
 
-Tested on a Digitakt MKI, OS 1.54: the radar, the pet, the CRT effects and the inverted flashes
-(0.3). The 0.5 pages and effects are not yet confirmed on a unit.
+Tested on a Digitakt MKI, OS 1.54: the radar, the pet, the screen effects, the
+screensavers, the clock, the scope and the ART page with its storm.
 
 ---
 

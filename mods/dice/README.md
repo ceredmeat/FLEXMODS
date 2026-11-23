@@ -52,7 +52,7 @@ The rolls lean toward the downbeats, so they groove.
 
 ## Tested on a unit
 
-Not yet confirmed on a unit: it has been run in an emulator of the Digitakt's firmware only.
+Tested on a Digitakt MKI, OS 1.54: rolling rhythms in REPL and ADD, the autopilot evolving a pattern with HOME pulling it back, NO restoring the track, and the settings saved.
 
 ---
 

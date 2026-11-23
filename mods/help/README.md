@@ -27,7 +27,7 @@ keys and knobs.
 
 ## Tested on a unit
 
-Not yet confirmed on a unit: it has been run in an emulator of the Digitakt's firmware only.
+Tested on a Digitakt MKI, OS 1.54: the list showing only the mods in the build, opening and scrolling the cards, and NO back to the list.
 
 ---
 

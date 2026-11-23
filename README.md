@@ -91,9 +91,8 @@ Each mod is its own `.elemod`: pick the ones you want in Elekloader, build your 
   VISUALS, DASH and HELP live after the stock master pages: press FUNC + LFO, then step with
   LEFT/RIGHT. Hold FUNC + LFO for half a second to go straight back to the page you used last.
 
-The mods up to FLEXMODS 1.3 were tested on a real Digitakt MKI running OS 1.54. Each mod's README
-says what was tested; the new ones are marked as not yet confirmed on a unit. No `.syx` is shared
-here: it would
+All the mods were tested on a real Digitakt MKI running OS 1.54; each mod's README says what was
+tested. No `.syx` is shared here: it would
 contain Elektron's firmware.
 
 ---

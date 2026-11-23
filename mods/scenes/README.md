@@ -88,7 +88,7 @@ Press **DOWN** on the SCENES page to see what the scenes hold: one row per value
 ## Tested on a unit
 
 Tested on a Digitakt MKI, OS 1.54: recording scenes A and B on several tracks, crossfading, the
-YES jump and clearing.
+YES jump and clearing, and SCENE INFO, the page keys and scenes kept with the project (0.3).
 
 ---
 

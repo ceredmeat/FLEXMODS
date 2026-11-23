@@ -72,7 +72,7 @@ Shared by all the sequencers:
 
 | Version | What changed |
 |---|---|
-| 0.6 | With PROJECT LINK in the build, the settings go with the project: saved when you save it, back when you load it, defaults for a new project (not yet confirmed on a unit). Page keys (TRIG, SRC, FLTR, AMP, LFO, GLOBAL, SAMPLE) close the FREQSEQ screen and go straight to that page. The save buffer is borrowed from the Digitakt's spare memory only while loading or saving, which leaves more RAM for your other mods. |
+| 0.6 | With PROJECT LINK in the build, the settings go with the project: saved when you save it, back when you load it, defaults for a new project. Page keys (TRIG, SRC, FLTR, AMP, LFO, GLOBAL, SAMPLE) close the FREQSEQ screen and go straight to that page. The save buffer is borrowed from the Digitakt's spare memory only while loading or saving, which leaves more RAM for your other mods. |
 | 0.5 | Fixed: ROULETTE and SCATTER hits that landed on sample 0 or start 0, and wobbles to 0, are no longer skipped. |
 | Earlier | A sequencer on every track at once, seven more sequencers (CANON to BERNOULLI), clearer screens. |
 
@@ -81,7 +81,7 @@ Shared by all the sequencers:
 ## Tested on a unit
 
 Tested on a Digitakt MKI, OS 1.54: all fifteen sequencers, including ROULETTE and SCATTER after the
-0.5 fix.
+0.5 fix, and settings kept with the project with PROJECT LINK (0.6).
 
 ---
 

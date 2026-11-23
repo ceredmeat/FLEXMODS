@@ -50,7 +50,7 @@ The EQ curve with each band's number at its handle, and the band you touch, in w
 
 ## Tested on a unit
 
-Not yet confirmed on a unit: it has been run in an emulator of the Digitakt's firmware only.
+Tested on a Digitakt MKI, OS 1.54: the four bands, bell and shelf, the widths, the high pass, IN / OUT, and the settings saved, with DIGIHEALTH in the build.
 
 ---
 

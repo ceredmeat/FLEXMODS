@@ -34,7 +34,7 @@ The bar that last moved is marked.
 
 ## Tested on a unit
 
-Not yet confirmed on a unit: it has been run in an emulator of the Digitakt's firmware only.
+Tested on a Digitakt MKI, OS 1.54: the SRC, LFO, filter and amp bars following the active track, and the slot finder.
 
 ---
 

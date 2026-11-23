@@ -37,7 +37,7 @@ they work as before: one set of settings, whatever project is loaded.
 
 ## Tested on a unit
 
-Not yet confirmed on a unit: it has been run in an emulator of the Digitakt's firmware only.
+Tested on a Digitakt MKI, OS 1.54: settings kept per project by the mods that use it: saved with SAVE PROJECT, back on load, defaults for a new project.
 
 ---
 
