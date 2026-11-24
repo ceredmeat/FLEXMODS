@@ -16,7 +16,7 @@ Each mod is its own `.elemod`: pick the ones you want in Elekloader, build your 
 |---|---|---|---|
 | TRIG MODES | `trigmodes-0.5.elemod` | NO + PAGE turns the trig keys into the Digitakt II's trig modes: TRKS (finger drumming), VEL (16 velocities), RTRG (retrig rolls, 1/4 to 1/64 with triplets and fade-outs) and RTRK (Model:Samples-style retrig on any track, several at once) | core, seq-events |
 | SCENES | `scenes-0.3.elemod` | Octatrack-style scenes A and B with a crossfader: record knob moves on any tracks into a scene, then morph between them (TRK + FUNC). SCENE INFO (DOWN) shows and clears single values | core |
-| DENSITY | `density-0.2.elemod` | One knob for how busy the pattern is: left drops trigs, right adds ghost notes, the middle plays it as written; can keep the downbeats | core, seq-events |
+| DENSITY | `density-0.3.elemod` | One knob for how busy the pattern is: left drops trigs, right adds ghost notes, the middle plays it as written; can keep the downbeats | core, seq-events |
 | KIT A/B | `kitab-0.2.elemod` | TRK + NO flips between your edited kit and the pattern's temp-saved kit (after the Analog Rytm) | core |
 | FILL | `fill-0.3.elemod` | Hold YES, then NO: the pattern plays a random variation of itself (shuffles, ghost notes, drops, accents), new each loop; let go and it's back. Any knob sets how wild | core, seq-events |
 | MUTE SNAPSHOTS | `mutesnap-0.2.elemod` | YES + trig 1–4 saves the mutes, NO + trig 1–4 recalls them at the end of the bar | core, seq-events |
@@ -27,7 +27,7 @@ Each mod is its own `.elemod`: pick the ones you want in Elekloader, build your 
 | Mod | File | What it does | Needs |
 |---|---|---|---|
 | FREQSEQ | `freqseq-0.6.elemod` | A generative sequencer on every track: 15 of them, from a Turing Machine and Grids to Game of Life, sample roulette and Morse code | core, seq-events |
-| POLYMETER | `polymeter-0.1.elemod` | Every track's length and speed on one page, with moving playheads and one-turn polymeter presets | core, seq-events |
+| POLYMETER | `polymeter-0.2.elemod` | Every track's length and speed on one page, with moving playheads and one-turn polymeter presets | core, seq-events |
 | REVERSE | `reverse-0.5.elemod` | A chance per track that a trig plays its sample backwards | core, seq-events |
 | DICE + AUTOPILOT | `dice-0.1.elemod` | Per track: roll a random rhythm (YES), or let AUTOPILOT change a step or two every few loops so the pattern slowly evolves. NO puts it back exactly as programmed | core, seq-events |
 | MIDI ARP | `midiarp-0.2.elemod` | An arpeggiator on each MIDI track, in time: a trig's chord or the notes you hold, UP/DOWN/UPDN/RND, 1/16-1/4, 1-3 octaves | core, seq-events |

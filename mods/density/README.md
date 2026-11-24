@@ -4,7 +4,7 @@ One knob for how busy your whole pattern is. Turn left and trigs drop out, right
 fill the gaps. Your pattern itself never changes, so the middle always plays it exactly as
 written.
 
-- **Mod:** `density` 0.2, for Elekloader
+- **Mod:** `density` 0.3, for Elekloader
 - **Digitakt MKI, OS 1.54 only**
 - **Needs in the build:** `core` (4.1 or later) and `seq-events`
 

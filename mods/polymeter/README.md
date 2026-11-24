@@ -3,7 +3,7 @@
 Every track's length and speed on one page, with a moving playhead per track, so you can see the
 tracks drift against each other. It also has one-turn polymeter presets.
 
-- **Mod:** `polymeter` 0.1, for Elekloader
+- **Mod:** `polymeter` 0.2, for Elekloader
 - **Digitakt MKI, OS 1.54 only**
 - **Needs in the build:** `core` (4.1 or later) and `seq-events`
 

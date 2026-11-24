@@ -1,6 +1,6 @@
 {
  "id": "polymeter",
- "version": "0.1",
+ "version": "0.2",
  "title": "POLYMETER: every track's length and speed on one page",
  "category": "Sequencer",
  "description": "A master page (FUNC + LFO, PLY): tracks 1-8 as lanes as long as their lengths, with moving playheads; knobs for the active track's length and speed, the pattern's scale mode and master length, and one-turn polymeter presets (16, DWN, PRM, 3V4). Edits the pattern itself, as the stock scale menu does, so it saves with the pattern.",

@@ -1,6 +1,6 @@
 {
  "id": "density",
- "version": "0.2",
+ "version": "0.3",
  "title": "DENSITY: one knob for how busy the pattern is",
  "category": "Performance",
  "description": "A master page (FUNC + LFO) with one density knob for the whole pattern: the middle plays it as it is, left drops trigs out, right adds ghost notes on empty steps. DWN keeps the downbeats, GHV sets the ghosts' velocity, NEW picks new steps each loop or keeps the same, TRK chooses all, audio, MIDI or all but track 1. The page shows what plays. Needs seq-events.",
